@@ -1,7 +1,7 @@
 {
   "name": "intor-cli",
   "version": "0.0.2",
-  "description": "Intor CLI",
+  "description": "📟 CLI tool for intor",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor-cli#readme",
   "repository": {
@@ -12,7 +12,9 @@
     "url": "https://github.com/yiming-liao/intor-cli/issues"
   },
   "keywords": [
-    "i18n"
+    "intor",
+    "i18n",
+    "cli"
   ],
   "license": "MIT",
   "type": "module",
