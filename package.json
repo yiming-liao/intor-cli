@@ -1,0 +1,72 @@
+{
+  "name": "intor-cli",
+  "version": "0.0.2",
+  "description": "Intor CLI",
+  "author": "Yiming Liao",
+  "homepage": "https://github.com/yiming-liao/intor-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yiming-liao/intor-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/yiming-liao/intor-cli/issues"
+  },
+  "keywords": [
+    "i18n"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "src"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "intor": "tsx src/cli/index.ts",
+    "type": "tsc --noEmit",
+    "lint": "eslint",
+    "lint:debug": "eslint --debug",
+    "test": "vitest",
+    "test:check": "tsx scripts/check-test-structure.ts",
+    "knip": "knip --config .config/knip.config.ts"
+  },
+  "bin": {
+    "intor": "src/cli/index.ts"
+  },
+  "dependencies": {
+    "@intor/reader-md": "0.1.1",
+    "@intor/reader-yaml": "0.1.0",
+    "cac": "6.7.14",
+    "fast-glob": "3.3.3",
+    "intor": "2.3.17",
+    "logry": "2.1.6",
+    "ora": "9.0.0",
+    "picocolors": "1.1.1",
+    "ts-morph": "27.0.2",
+    "tsx": "4.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.3",
+    "@vitest/coverage-v8": "4.0.16",
+    "eslint": "9.39.2",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-unicorn": "62.0.0",
+    "eslint-plugin-unused-imports": "4.3.0",
+    "knip": "5.79.0",
+    "prettier": "3.7.4",
+    "remark": "15.0.1",
+    "remark-gfm": "4.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.51.0",
+    "vitest": "4.0.16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
