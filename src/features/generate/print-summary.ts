@@ -1,9 +1,8 @@
 import pc from "picocolors";
 
-export function printSummary(outDir: string, ms: number) {
-  const labelWidth = 18;
-  const label = (text: string) => pc.dim(text.padEnd(labelWidth));
+const label = (text: string) => pc.dim(text.padEnd(18));
 
+export function printSummary(outDir: string, ms: number) {
   console.log();
   console.log(pc.green(pc.bold("✔ intor generate completed")));
   console.log();

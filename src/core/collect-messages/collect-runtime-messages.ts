@@ -1,3 +1,4 @@
+import type { CollectRuntimeMessagesResult, MergeOverrides } from "./types";
 import type { ExtraExt } from "../../core";
 import {
   mergeMessages,
@@ -20,7 +21,7 @@ export async function collectRuntimeMessages(
   locale: string,
   exts: Array<ExtraExt> = [],
   customReaders?: Record<string, string>, // {ext, customReaderFilePath}
-): Promise<LocaleMessages> {
+): Promise<CollectRuntimeMessagesResult> {
   // ----------------------------------------------------------------------
   // Resolve readers
   // ----------------------------------------------------------------------
@@ -37,6 +38,7 @@ export async function collectRuntimeMessages(
   // ----------------------------------------------------------------------
   let serverMessages: LocaleMessages | undefined;
   let clientMessages: LocaleMessages | undefined;
+  const overrides: MergeOverrides[] = [];
 
   // Load server-side runtime messages
   if (config.loader || config.server?.loader) {
@@ -69,8 +71,29 @@ export async function collectRuntimeMessages(
   const runtimeMessages = mergeMessages(serverMessages, clientMessages, {
     config,
     locale,
+    onEvent: (event) => {
+      overrides.push({
+        ...event,
+        layer: "client_over_server",
+        locale,
+        configId: config.id,
+      });
+    },
   });
 
   // runtime messages > static messages
-  return mergeMessages(config.messages, runtimeMessages, { config, locale });
+  const messages = mergeMessages(config.messages, runtimeMessages, {
+    config,
+    locale,
+    onEvent: (event) => {
+      overrides.push({
+        ...event,
+        layer: "runtime_over_static",
+        locale,
+        configId: config.id,
+      });
+    },
+  });
+
+  return { messages, overrides };
 }

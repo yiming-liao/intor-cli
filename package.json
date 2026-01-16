@@ -1,6 +1,6 @@
 {
   "name": "intor-cli",
-  "version": "0.0.2",
+  "version": "0.0.9",
   "description": "📟 CLI tool for intor",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor-cli#readme",
@@ -43,7 +43,7 @@
     "@intor/reader-yaml": "0.1.0",
     "cac": "6.7.14",
     "fast-glob": "3.3.3",
-    "intor": "2.3.17",
+    "intor": "2.3.22",
     "logry": "2.1.6",
     "ora": "9.0.0",
     "picocolors": "1.1.1",

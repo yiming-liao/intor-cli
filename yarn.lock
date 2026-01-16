@@ -2035,10 +2035,10 @@ intor-translator@1.4.13:
   dependencies:
     rura "^1.0.8"
 
-intor@2.3.17:
-  version "2.3.17"
-  resolved "https://registry.yarnpkg.com/intor/-/intor-2.3.17.tgz#6927e15c707e2a6ca0e0bf516a2883aed83151dc"
-  integrity sha512-CtoRGfQUYcT7JRAPnshiBeNGE0Hi6NwZZ/MY4dmTi2BWzdHHSWZjqTGSIL9bUkBoy05KxFS/yRGwqaH7uHtoWg==
+intor@2.3.22:
+  version "2.3.22"
+  resolved "https://registry.yarnpkg.com/intor/-/intor-2.3.22.tgz#a5052c26398a96afb1cbc007b01d638f0a758bbe"
+  integrity sha512-r7EuPaKXfjNTqIocX9S0xRrpPEFEAxAnMoqgqmnlmu1ymvaVc4QQNVkbcHmreGHH5TX6msubl4AVtKriT+TpPw==
   dependencies:
     intor-translator "1.4.13"
     logry "2.1.6"

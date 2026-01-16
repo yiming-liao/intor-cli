@@ -34,6 +34,7 @@ npx intor-cli generate
 
 - Generates TypeScript types and schema artifacts
 - Designed to be safe, deterministic, and non-intrusive
+- Displays runtime message override details during generation
 
 #### check
 

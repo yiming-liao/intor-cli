@@ -10,6 +10,7 @@ import {
 import { printTitle } from "../print-title";
 import { spinner } from "../spinner";
 import { printConfigs } from "./print-configs";
+import { printOverrides } from "./print-overrides";
 import { printSummary } from "./print-summary";
 
 export interface GenerateOptions {
@@ -44,16 +45,17 @@ export async function generate({
 
     // Runtime mode - Per-config processing
     for (const { config, filePath } of configEntries) {
-      const { id, supportedLocales } = config;
+      const { id, supportedLocales: locales } = config;
       printConfigs(id, filePath);
-      const messages = await collectRuntimeMessages(
+      const { messages, overrides } = await collectRuntimeMessages(
         config,
         config.defaultLocale,
         exts,
         customReaders,
       );
+      printOverrides(overrides);
       const schemas = inferSchemas(messages[config.defaultLocale]);
-      buildInputs.push({ id, locales: supportedLocales, schemas });
+      buildInputs.push({ id, locales, schemas });
     }
 
     // -----------------------------------------------------------------------
@@ -66,8 +68,7 @@ export async function generate({
     const { outDir } = await writeGeneratedFiles({ types, schema });
 
     spinner.stop();
-    const duration = performance.now() - start;
-    printSummary(outDir, duration);
+    printSummary(outDir, performance.now() - start);
   } catch (error) {
     spinner.stop();
     console.error(error instanceof Error ? error.message : String(error));
