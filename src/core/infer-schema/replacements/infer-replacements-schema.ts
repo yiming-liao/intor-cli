@@ -55,7 +55,7 @@ function inferValue(value: MessageValue): InferNode {
   // Object values (delegate aggregation & pruning)
   // ----------------------------------------------------------------------
   if (isMessageObject(value)) {
-    return inferObject(value, inferValue);
+    return inferObject(value, inferValue, "replacements");
   }
 
   // Fallback

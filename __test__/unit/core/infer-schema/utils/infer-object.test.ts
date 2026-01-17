@@ -1,72 +1,80 @@
+/* eslint-disable unicorn/consistent-function-scoping */
 import type { InferNode } from "../../../../../src/core/infer-schema";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { inferObject } from "../../../../../src/core/infer-schema/utils/infer-object";
 
 describe("inferObject", () => {
-  it("delegates inference to child nodes", () => {
-    const inferChild = vi.fn<(value: unknown) => InferNode>().mockReturnValue({
-      kind: "primitive",
-      type: "string",
-    });
-    inferObject({ a: "hello", b: "world" }, inferChild);
-    expect(inferChild).toHaveBeenCalledTimes(2);
-    expect(inferChild).toHaveBeenCalledWith("hello");
-    expect(inferChild).toHaveBeenCalledWith("world");
-  });
+  const inferChild = (value: unknown): InferNode => {
+    if (typeof value === "string") {
+      return { kind: "primitive", type: "string" };
+    }
+    if (typeof value === "object" && value !== null) {
+      return { kind: "object", properties: {} };
+    }
+    return { kind: "none" };
+  };
 
-  it("collects inferred children into an object node", () => {
-    const inferChild = vi
-      .fn<(value: unknown) => InferNode>()
-      .mockImplementation((value) => {
-        if (value === "keep") {
-          return { kind: "primitive", type: "string" };
-        }
-        return { kind: "none" };
-      });
-    const result = inferObject({ a: "keep", b: "drop" }, inferChild);
+  it("aggregates inferred children into an object node", () => {
+    const result = inferObject(
+      { greeting: "hello", title: "world" },
+      inferChild,
+      "messages",
+    );
     expect(result).toEqual({
       kind: "object",
       properties: {
-        a: { kind: "primitive", type: "string" },
+        greeting: { kind: "primitive", type: "string" },
+        title: { kind: "primitive", type: "string" },
       },
     });
   });
 
-  it("prunes branches with kind 'none'", () => {
-    const inferChild = vi
-      .fn<(value: unknown) => InferNode>()
-      .mockReturnValue({ kind: "none" });
-    const result = inferObject({ a: "x", b: "y" }, inferChild);
-    expect(result).toEqual({ kind: "none" });
-  });
-
-  it("returns 'none' when all children are pruned", () => {
-    const inferChild = vi
-      .fn<(value: unknown) => InferNode>()
-      .mockReturnValue({ kind: "none" });
-    const result = inferObject({ a: "x" }, inferChild);
-    expect(result).toEqual({ kind: "none" });
-  });
-
-  it("returns an object node with multiple inferred properties", () => {
-    const inferChild = vi
-      .fn<(value: unknown) => InferNode>()
-      .mockImplementation((value) => {
-        if (value === 1) {
-          return { kind: "primitive", type: "number" };
-        }
-        if (value === true) {
-          return { kind: "primitive", type: "boolean" };
-        }
-        return { kind: "none" };
-      });
-    const result = inferObject({ a: 1, b: true, c: null }, inferChild);
+  it("skips internal intor metadata keys", () => {
+    const result = inferObject(
+      { greeting: "hello", __intor_kind: "markdown" },
+      inferChild,
+      "messages",
+    );
     expect(result).toEqual({
       kind: "object",
-      properties: {
-        a: { kind: "primitive", type: "number" },
-        b: { kind: "primitive", type: "boolean" },
-      },
+      properties: { greeting: { kind: "primitive", type: "string" } },
+    });
+  });
+
+  it("skips content key outside of messages mode", () => {
+    const result = inferObject(
+      { content: "markdown text", greeting: "hello" },
+      inferChild,
+      "replacements",
+    );
+    expect(result).toEqual({
+      kind: "object",
+      properties: { greeting: { kind: "primitive", type: "string" } },
+    });
+  });
+
+  it("returns none if all children are skipped or non-semantic", () => {
+    const result = inferObject(
+      { __intor_kind: "markdown", content: "markdown text" },
+      inferChild,
+      "replacements",
+    );
+    expect(result).toEqual({ kind: "none" });
+  });
+
+  it("skips children inferred as none", () => {
+    const inferChild = (value: unknown): InferNode => {
+      if (value === "skip-me") return { kind: "none" };
+      return { kind: "primitive", type: "string" };
+    };
+    const result = inferObject(
+      { visible: "ok", hidden: "skip-me" },
+      inferChild,
+      "messages",
+    );
+    expect(result).toEqual({
+      kind: "object",
+      properties: { visible: { kind: "primitive", type: "string" } },
     });
   });
 });
