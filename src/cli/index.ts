@@ -3,6 +3,7 @@
 import { cac } from "cac";
 import { registerCheckCommand } from "./commands/check";
 import { registerGenerateCommand } from "./commands/generate";
+import { registerValidateCommand } from "./commands/validate";
 
 const cli = cac("intor");
 
@@ -11,6 +12,7 @@ const cli = cac("intor");
 // ---------------------------------------------------------------------
 registerGenerateCommand(cli);
 registerCheckCommand(cli);
+registerValidateCommand(cli);
 
 // ---------------------------------------------------------------------
 // Global options / help

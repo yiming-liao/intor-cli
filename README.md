@@ -24,7 +24,13 @@ CLI tool for intor.
 </table>
 </div>
 
-## Usage
+## Overview
+
+- **generate** — message schema & types
+- **check** — usage analysis
+- **validate** — locale completeness
+
+## Commands
 
 #### generate
 
@@ -33,8 +39,8 @@ npx intor-cli generate
 ```
 
 - Generates TypeScript types and schema artifacts
-- Designed to be safe, deterministic, and non-intrusive
-- Displays runtime message override details during generation
+- Uses the default locale as the single source of truth
+- Reports message override behavior during generation
 
 #### check
 
@@ -42,13 +48,23 @@ npx intor-cli generate
 npx intor-cli check
 ```
 
-- Statically extracts translator usages from your codebase
-- Validates preKey, message keys, replacements, and rich tags
+- Statistically analyzes translator usage in your codebase
+- Detects incorrect keys, replacements, and rich tag usage
 - Reports diagnostics with precise source locations
+
+#### validate
+
+```bash
+npx intor-cli validate
+```
+
+- Validates locale message completeness against schemas
+- Checks missing keys, replacements, and rich tags
+- Reports issues grouped by config and locale
 
 ## Design Guarantees
 
 - Message types are inferred from the **_default locale_** only.
-- All locales are assumed to share the same message shape.
-- Locale is treated as a runtime dimension, not a structural one.
-- Generated types are intentionally conservative and do not validate locale completeness.
+- All locales are expected to share the same message shape.
+- Locale is treated strictly as a runtime dimension, not a structural one.
+- Generated types are intentionally conservative and do not enforce locale completeness.

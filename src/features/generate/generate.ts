@@ -1,15 +1,17 @@
 /* eslint-disable unicorn/no-process-exit */
 import type { ExtraExt } from "../../core";
+import path from "node:path";
 import { buildTypes, buildSchemas, type BuildInput } from "../../build";
 import {
   discoverConfigs,
   collectRuntimeMessages,
   inferSchemas,
-  writeGeneratedFiles,
+  writeTypes,
+  writeSchema,
+  DEFAULT_OUT_DIR,
 } from "../../core";
-import { printTitle } from "../print-title";
+import { cyan, dim, print, printTitle } from "../print";
 import { spinner } from "../spinner";
-import { printConfigs } from "./print-configs";
 import { printOverrides } from "./print-overrides";
 import { printSummary } from "./print-summary";
 
@@ -35,7 +37,7 @@ export async function generate({
     const configEntries = await discoverConfigs(debug);
     if (configEntries.length === 0) {
       spinner.stop();
-      throw new Error("No Intor config found for type generation.");
+      throw new Error("No Intor config found.");
     }
 
     // -----------------------------------------------------------------------
@@ -46,13 +48,18 @@ export async function generate({
     // Runtime mode - Per-config processing
     for (const { config, filePath } of configEntries) {
       const { id, supportedLocales: locales } = config;
-      printConfigs(id, filePath);
+
+      spinner.stop();
+      print(`${dim("Config:")} ${cyan(config.id)}  ${dim(`⚲ ${filePath}`)}`);
+      spinner.start();
+
       const { messages, overrides } = await collectRuntimeMessages(
         config,
         config.defaultLocale,
         exts,
         customReaders,
       );
+
       printOverrides(overrides);
       const schemas = inferSchemas(messages[config.defaultLocale]);
       buildInputs.push({ id, locales, schemas });
@@ -64,11 +71,12 @@ export async function generate({
     const types = buildTypes(buildInputs);
     const schema = buildSchemas(buildInputs);
 
-    // Write generated files
-    const { outDir } = await writeGeneratedFiles({ types, schema });
+    // Write files
+    await writeTypes(types);
+    await writeSchema(schema);
 
     spinner.stop();
-    printSummary(outDir, performance.now() - start);
+    printSummary(path.resolve(DEFAULT_OUT_DIR), performance.now() - start);
   } catch (error) {
     spinner.stop();
     console.error(error instanceof Error ? error.message : String(error));

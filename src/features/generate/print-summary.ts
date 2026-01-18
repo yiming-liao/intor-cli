@@ -1,18 +1,26 @@
-import pc from "picocolors";
+import { bold, br, dim, gray, green, italic, print } from "../print";
 
-const label = (text: string) => pc.dim(text.padEnd(18));
+const label = (text: string) => dim(text.padEnd(18));
 
 export function printSummary(outDir: string, ms: number) {
-  console.log();
-  console.log(pc.green(pc.bold("✔ intor generate completed")));
-  console.log();
-  console.log(label("Output directory: ") + pc.gray(outDir));
-  console.log(label("Time elapsed: ") + pc.gray(`${(ms / 1000).toFixed(2)}s`));
-  console.log();
-  console.log(
-    pc.dim("💡 Remember to include ") +
-      pc.gray(".intor/**/*.d.ts") +
-      pc.dim(" in your tsconfig.json "),
+  br();
+
+  print(green(bold("✔ intor generate completed")));
+
+  br();
+
+  print(label("Output directory: ") + gray(outDir));
+  print(label("Time elapsed: ") + gray(`${(ms / 1000).toFixed(2)}s`));
+
+  br();
+
+  print(
+    italic(
+      dim("💡 Remember to include ") +
+        gray(".intor/**/*.d.ts") +
+        dim(" in your tsconfig.json "),
+    ),
   );
-  console.log();
+
+  br();
 }

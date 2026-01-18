@@ -1,4 +1,4 @@
-import type { InferNode } from "../../../core/infer-schema";
+import type { InferNode } from "../../../core";
 import { indent } from "./indent";
 
 export function renderInferNode(node: InferNode, indentLevel = 4): string {

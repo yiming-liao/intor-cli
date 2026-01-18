@@ -1,15 +1,10 @@
 /* eslint-disable unicorn/no-process-exit */
-import type { ReadGeneratedSchemaOptions } from "../../core";
-import type { ExtractUsagesOptions } from "../../core/extract-usages/extract-usages";
-import {
-  readGeneratedSchema,
-  extractUsages,
-  collectDiagnostics,
-  groupDiagnostics,
-} from "../../core";
-import { printTitle } from "../../features/print-title";
+import type { ExtractUsagesOptions } from "../../core";
+import { extractUsages, readSchema } from "../../core";
+import { printTitle } from "../print";
 import { spinner } from "../spinner";
 import { dedupePreKeyUsages } from "./dedupe-pre-key-usages";
+import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
 import { printSummary } from "./print-summary";
 
 function resolveConfigKey(
@@ -21,18 +16,15 @@ function resolveConfigKey(
   return usageConfigKey;
 }
 
-export async function check(
-  readOptions?: ReadGeneratedSchemaOptions,
-  extractOptions?: ExtractUsagesOptions,
-) {
-  printTitle("Checking intor diagnostics");
+export async function check(extractOptions?: ExtractUsagesOptions) {
+  printTitle("Checking intor usages");
   spinner.start();
 
   try {
     // -----------------------------------------------------------------------
     // Read generated schema
     // -----------------------------------------------------------------------
-    const generatedSchema = await readGeneratedSchema(readOptions);
+    const generatedSchema = await readSchema();
 
     // -----------------------------------------------------------------------
     // Extract usages

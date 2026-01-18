@@ -1,8 +1,8 @@
-import pc from "picocolors";
+import { cyan, dim, print } from "../print";
 import { spinner } from "../spinner";
 
-export function printConfigs(id: string, filePath: string) {
+export function printConfigs(configId: string, filePath: string) {
   spinner.stop();
-  console.log(pc.dim("- Config ") + pc.cyan(id) + pc.dim(` ${filePath}`));
+  print(`${dim("Config:")} ${cyan(configId)}  ⚲ ${filePath}`);
   spinner.start();
 }

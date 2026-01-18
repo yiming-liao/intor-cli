@@ -1,13 +1,40 @@
+// discover-configs
 export { discoverConfigs } from "./discover-configs";
-export { collectRuntimeMessages } from "./collect-messages";
-export { inferSchemas, type InferredSchemas } from "./infer-schema";
-export { extractUsages } from "./extract-usages";
-export { collectDiagnostics, groupDiagnostics } from "./diagnostics";
 
-export { writeGeneratedFiles } from "./write-generated-files";
+// collect-messages
 export {
-  readGeneratedSchema,
-  type ReadGeneratedSchemaOptions,
-} from "./read-generated-schema";
+  collectRuntimeMessages,
+  collectOtherLocaleMessages,
+} from "./collect-messages";
 
-export { EXTRA_EXTS, type ExtraExt } from "./constants";
+// infer-schema
+export {
+  inferSchemas,
+  type InferNode,
+  type InferredSchemas,
+  extractInterpolationNames,
+} from "./infer-schema";
+
+// extract-usages
+export {
+  extractUsages,
+  type ExtractUsagesOptions,
+  type ExtractedUsages,
+  type TranslatorFactory,
+  type TranslatorMethod,
+  type ReplacementUsage,
+  type PreKeyUsage,
+  type KeyUsage,
+  type RichUsage,
+} from "./extract-usages";
+
+// generated
+export {
+  writeTypes,
+  writeSchema,
+  readSchema,
+  writeMessagesSnapshot,
+} from "./generated";
+
+// constants
+export { DEFAULT_OUT_DIR, EXTRA_EXTS, type ExtraExt } from "./constants";

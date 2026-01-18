@@ -1,6 +1,6 @@
-import type { BuildInput, GeneratedSchema } from "../types";
+import type { BuildInput, Schema } from "../types";
 
-export function buildSchemas(inputs: BuildInput[]): GeneratedSchema {
+export function buildSchemas(inputs: BuildInput[]): Schema {
   return {
     version: 1,
     generatedAt: new Date().toISOString(),

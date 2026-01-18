@@ -1,4 +1,4 @@
-export { extractUsages } from "./extract-usages";
+export { extractUsages, type ExtractUsagesOptions } from "./extract-usages";
 
 export type {
   ExtractedUsages,

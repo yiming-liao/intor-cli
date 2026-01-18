@@ -1,6 +1,7 @@
 import type { ExtraExt } from "../../core";
 import type { CAC } from "cac";
 import { generate } from "../../features";
+import { normalizeReaderOptions } from "./utils/normalize-reader-options";
 
 export function registerGenerateCommand(cli: CAC) {
   cli
@@ -37,19 +38,7 @@ export function registerGenerateCommand(cli: CAC) {
         debug?: boolean;
       };
 
-      // Normalize exts
-      const exts = ext ? (Array.isArray(ext) ? ext : [ext]) : [];
-
-      // Parse customReaders: ["md=./my-md-reader.ts"] → { md: "./my-md-reader.ts" }
-      let customReaders: Record<string, string> | undefined;
-      if (reader && reader.length > 0) {
-        customReaders = {};
-        for (const item of reader) {
-          const [key, value] = item.split("=", 2);
-          if (!key || !value) continue;
-          customReaders[key] = value;
-        }
-      }
+      const { exts, customReaders } = normalizeReaderOptions({ ext, reader });
 
       try {
         await generate({ exts, customReaders, debug });

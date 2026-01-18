@@ -7,12 +7,13 @@ export interface BuildInput {
 }
 
 // Schema
-export interface GeneratedSchema {
+export interface Schema {
   version: number;
   generatedAt: string;
-  configs: GeneratedSchemaConfig[];
+  configs: SchemaConfig[];
 }
-export interface GeneratedSchemaConfig {
+
+export interface SchemaConfig {
   id: string;
   locales: readonly string[];
   schemas: InferredSchemas;

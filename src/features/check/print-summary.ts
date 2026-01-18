@@ -1,28 +1,28 @@
-import type { DiagnosticGroup } from "../../core/diagnostics/types";
-import pc from "picocolors";
+import type { DiagnosticGroup } from "./diagnostics/types";
+import { br, dim, printList, cyan, print, gray } from "../print";
 
 export function printSummary(configId: string, grouped: DiagnosticGroup[]) {
-  // Log header
-  console.log(pc.dim("Config:"), pc.cyan(`${configId}\n`));
+  print(`${dim("Config:")} ${cyan(configId)}`);
+  br();
 
-  // Log no issues
+  // No issues
   if (grouped.length === 0) {
-    console.log(pc.dim("✔ Diagnostics completed with no issues.\n"));
+    print(dim("✔ All usages are valid\n"), 1);
     return;
   }
 
-  // Log problems
+  // Problems
   for (const group of grouped) {
     const { factory, method, messageKey, problems, file, lines } = group;
 
-    const header = `${messageKey} ${`(${method ?? factory})`}\n`;
+    const header = `${messageKey} (${method ?? factory})`;
 
-    const problemsLine = [
-      ...problems.map((p) => pc.gray(`   - ${p}`)),
-      pc.dim(`   ➜ ${file}:${lines.join(",")}`),
-      "",
-    ].join("\n");
-
-    console.log(header + problemsLine);
+    print(header, 1);
+    printList(
+      null,
+      problems.map((p) => gray(p)),
+      1,
+    );
+    print(dim(`  ⚲ ${file}:${lines.join(",")}\n`), 1);
   }
 }
