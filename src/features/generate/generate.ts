@@ -1,5 +1,8 @@
 /* eslint-disable unicorn/no-process-exit */
 import type { ExtraExt } from "../../core";
+import type { MergeOverrides } from "../../core/collect-messages/types";
+import type { LocaleMessages } from "intor";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { buildTypes, buildSchemas, type BuildInput } from "../../build";
 import {
@@ -16,12 +19,14 @@ import { printOverrides } from "./print-overrides";
 import { printSummary } from "./print-summary";
 
 export interface GenerateOptions {
+  messageFilePath?: string;
   exts?: Array<ExtraExt>;
   customReaders?: Record<string, string>;
   debug?: boolean;
 }
 
 export async function generate({
+  messageFilePath,
   exts = [],
   customReaders,
   debug,
@@ -29,6 +34,8 @@ export async function generate({
   printTitle("Generating intor types");
   spinner.start();
   const start = performance.now();
+
+  const hasTarget = !!messageFilePath;
 
   try {
     // -----------------------------------------------------------------------
@@ -53,12 +60,21 @@ export async function generate({
       print(`${dim("Config:")} ${cyan(config.id)}  ${dim(`⚲ ${filePath}`)}`);
       spinner.start();
 
-      const { messages, overrides } = await collectRuntimeMessages(
-        config,
-        config.defaultLocale,
-        exts,
-        customReaders,
-      );
+      let messages: LocaleMessages;
+      let overrides: MergeOverrides[] = [];
+      if (!hasTarget) {
+        const result = await collectRuntimeMessages(
+          config,
+          config.defaultLocale,
+          exts,
+          customReaders,
+        );
+        messages = result.messages;
+        overrides = result.overrides;
+      } else {
+        const content = await readFile(messageFilePath, "utf8");
+        messages = { [config.defaultLocale]: JSON.parse(content) };
+      }
 
       printOverrides(overrides);
       const schemas = inferSchemas(messages[config.defaultLocale]);

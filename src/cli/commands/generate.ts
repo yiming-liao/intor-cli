@@ -14,6 +14,10 @@ export function registerGenerateCommand(cli: CAC) {
     // Option
     // -----------------------------------------------------------------------
     .option(
+      "--messages <path>",
+      "Explicit messages file for schema generation (bypass runtime loader)",
+    )
+    .option(
       "--ext <ext>",
       "Enable extra messages file extension (repeatable)",
       { default: [] },
@@ -32,7 +36,8 @@ export function registerGenerateCommand(cli: CAC) {
     // Action
     // -----------------------------------------------------------------------
     .action(async (options) => {
-      const { ext, reader, debug } = options as {
+      const { messages, ext, reader, debug } = options as {
+        messages?: string;
         ext?: Array<ExtraExt>;
         reader?: string[];
         debug?: boolean;
@@ -41,7 +46,12 @@ export function registerGenerateCommand(cli: CAC) {
       const { exts, customReaders } = normalizeReaderOptions({ ext, reader });
 
       try {
-        await generate({ exts, customReaders, debug });
+        await generate({
+          messageFilePath: messages,
+          exts,
+          customReaders,
+          debug,
+        });
       } catch (error) {
         console.error(error);
         process.exitCode = 1;
