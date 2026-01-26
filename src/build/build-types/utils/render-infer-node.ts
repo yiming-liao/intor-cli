@@ -13,7 +13,9 @@ export function renderInferNode(node: InferNode, indentLevel = 4): string {
       return `${renderInferNode(node.element, indentLevel)}[]`;
     }
     case "record": {
-      return "Record<string, unknown>";
+      // Rich leaf nodes must be non-indexable to preserve
+      // key narrowing and autocomplete behavior
+      return "Record<string, never>";
     }
     case "object": {
       return `{

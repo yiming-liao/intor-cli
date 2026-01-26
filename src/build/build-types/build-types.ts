@@ -1,5 +1,6 @@
 import type { BuildInput } from "../types";
 import { appendHeader, appendConfigBlock, appendFooter } from "./output";
+import { normalizeRichInferNode } from "./utils/normalize-rich-infer-node";
 import { renderInferNode } from "./utils/render-infer-node";
 
 const GENERATED_INTERFACE_NAME = "IntorGeneratedTypes";
@@ -18,7 +19,9 @@ export function buildTypes(inputs: BuildInput[]): string {
     const localesType = input.locales.map((l) => `"${l}"`).join(" | ");
     const messagesType = renderInferNode(input.schemas.messagesSchema);
     const replacementsType = renderInferNode(input.schemas.replacementsSchema);
-    const richType = renderInferNode(input.schemas.richSchema);
+    const richType = renderInferNode(
+      normalizeRichInferNode(input.schemas.richSchema),
+    );
 
     if (index === 0) {
       appendConfigBlock(lines, {

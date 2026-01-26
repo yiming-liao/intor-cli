@@ -29,11 +29,11 @@ describe("renderInferNode", () => {
     expect(renderInferNode(node)).toBe("number[]");
   });
 
-  it("renders record types as unknown record", () => {
+  it("renders record types as non-indexable record", () => {
     const node: InferNode = {
       kind: "record",
     };
-    expect(renderInferNode(node)).toBe("Record<string, unknown>");
+    expect(renderInferNode(node)).toBe("Record<string, never>");
   });
 
   it("renders object types with properties", () => {
