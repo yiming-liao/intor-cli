@@ -1,11 +1,15 @@
 import type { ExtraExt } from "../../core/constants";
 import type { MessagesReader, MessagesReaders } from "intor";
+import { json5Reader } from "@intor/reader-json5";
 import { mdReader } from "@intor/reader-md";
+import { tomlReader } from "@intor/reader-toml";
 import { yamlReader } from "@intor/reader-yaml";
 
 export const BUILTIN_READERS: Record<ExtraExt, MessagesReader> = {
   md: mdReader,
   yaml: yamlReader,
+  toml: tomlReader,
+  json5: json5Reader,
 };
 
 export const getBuiltInReaders = (

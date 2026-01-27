@@ -275,7 +275,19 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@intor/reader-md@0.1.4":
+"@iarna/toml@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
+  integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
+
+"@intor/reader-json5@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@intor/reader-json5/-/reader-json5-0.1.0.tgz#201f7d9159206b1e62d24e9a1aef6929cbc43f99"
+  integrity sha512-ubyME0dHIf4gEkTE7syEfk0pO6FeJDB8TrdUEh7a9coaamSQlOC9DCoFEJQwxEpdGyPGWG7RmKGyfdd/ErjZsw==
+  dependencies:
+    json5 "^2.2.3"
+
+"@intor/reader-md@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@intor/reader-md/-/reader-md-0.1.4.tgz#61d711da555aa701596afdde2a48db6b30fff448"
   integrity sha512-l86PW95mKZdwTbqInSyBYBtEvvL8i+BYYYG2e3mKKG+Vw1lV2oDOJA4Id5jFNzh+dAjCLQe2E9iOO/RAakVoKw==
@@ -284,7 +296,14 @@
     remark "^15.0.1"
     remark-gfm "^4.0.1"
 
-"@intor/reader-yaml@0.1.1":
+"@intor/reader-toml@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@intor/reader-toml/-/reader-toml-0.1.0.tgz#872eb81c791d8389bee47732aebf0ff60e3efeab"
+  integrity sha512-ZknX+fl4ACUM1PVfPsTcAWlpqktFvdxhMlykU4Op9AEmiEciQdaXXUtLmYrV6kb8AkIXDmhqdPoUMaWssbS97Q==
+  dependencies:
+    "@iarna/toml" "^2.2.5"
+
+"@intor/reader-yaml@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@intor/reader-yaml/-/reader-yaml-0.1.1.tgz#a696d66bf1e5e9e2b1f3f8768f03021fb5bc5ceb"
   integrity sha512-DnIDTPtpg8MRbcLCp1wgB2dg0Qd2FoPmwp1NuDJ0uWfnHFIynFJnZfSJAeCDnBKn9fKbf65BpgO06zZ3p9iWag==
@@ -2341,6 +2360,11 @@ json5@^1.0.2:
   integrity sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA==
   dependencies:
     minimist "^1.2.0"
+
+json5@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
+  integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
 keyv@^4.5.4:
   version "4.5.4"

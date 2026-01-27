@@ -1,12 +1,6 @@
 <h1 align="center">intor-cli</h1>
 
 <div align="center">
-  
-CLI tool for intor.
-
-</div>
-
-<div align="center">
 
 [![NPM version](https://img.shields.io/npm/v/intor-cli?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/intor-cli)
 [![TypeScript](https://img.shields.io/badge/TypeScript-%E2%9C%94-blue?style=flat&colorA=000000&colorB=000000)](https://www.typescriptlang.org/)

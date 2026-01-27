@@ -1,7 +1,7 @@
 {
   "name": "intor-cli",
-  "version": "0.0.11",
-  "description": "📟 CLI tool for intor",
+  "version": "0.0.13",
+  "description": "The Intor CLI",
   "author": "Yiming Liao",
   "homepage": "https://github.com/yiming-liao/intor-cli#readme",
   "repository": {
@@ -39,8 +39,10 @@
     "intor": "src/cli/index.ts"
   },
   "dependencies": {
-    "@intor/reader-md": "0.1.4",
-    "@intor/reader-yaml": "0.1.1",
+    "@intor/reader-json5": "^0.1.0",
+    "@intor/reader-md": "^0.1.4",
+    "@intor/reader-toml": "^0.1.0",
+    "@intor/reader-yaml": "^0.1.1",
     "cac": "6.7.14",
     "fast-glob": "3.3.3",
     "intor": "2.3.26",
