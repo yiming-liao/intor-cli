@@ -34,7 +34,7 @@ describe("preKeyNotFound", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        factory: "useTranslator",
+        origin: "useTranslator",
         messageKey: "missing",
         code: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.code,
         message: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.message(),

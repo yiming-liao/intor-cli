@@ -7,6 +7,7 @@ import {
   collectReplacementUsages,
   collectRichUsages,
   collectPreKeys,
+  collectTransUsages,
 } from "../../../../src/core/extract-usages/collectors";
 import { extractUsagesFromSourceFile } from "../../../../src/core/extract-usages/extract-usages-from-source-file";
 
@@ -16,6 +17,7 @@ vi.mock("../../../../src/core/extract-usages/collectors", () => ({
   collectReplacementUsages: vi.fn(),
   collectRichUsages: vi.fn(),
   collectPreKeys: vi.fn(),
+  collectTransUsages: vi.fn(),
 }));
 
 const mockSourceFile = {} as SourceFile;
@@ -27,14 +29,16 @@ describe("extractUsagesFromSourceFile", () => {
     vi.clearAllMocks();
   });
 
-  it("returns fully empty structure when no translator bindings exist", () => {
+  it("returns only trans usages when no translator bindings exist", () => {
     (collectTranslatorBindings as any).mockReturnValue(new Map());
+    (collectTransUsages as any).mockReturnValue([{ key: "home.title" }]);
     const result = extractUsagesFromSourceFile(mockSourceFile);
     expect(result).toEqual({
       preKey: [],
       key: [],
       replacement: [],
       rich: [],
+      trans: [{ key: "home.title" }],
     });
     expect(collectKeyUsages).not.toHaveBeenCalled();
     expect(collectReplacementUsages).not.toHaveBeenCalled();
@@ -57,11 +61,13 @@ describe("extractUsagesFromSourceFile", () => {
       preKeyMap,
       usages: preKeyUsages,
     });
+    (collectTransUsages as any).mockReturnValue([]);
     const result = extractUsagesFromSourceFile(mockSourceFile);
     expect(result.preKey).toBe(preKeyUsages);
     expect(result.key[0].preKey).toBe("home");
     expect(result.replacement[0].preKey).toBe("home");
     expect(result.rich[0].preKey).toBe("home");
+    expect(result.trans).toEqual([]);
   });
 
   it("does not attach preKey when no matching entry exists", () => {
@@ -75,8 +81,10 @@ describe("extractUsagesFromSourceFile", () => {
       preKeyMap: new Map(),
       usages: [],
     });
+    (collectTransUsages as any).mockReturnValue([]);
     const result = extractUsagesFromSourceFile(mockSourceFile);
     expect(result.key[0].preKey).toBeUndefined();
     expect(result.preKey).toEqual([]);
+    expect(result.trans).toEqual([]);
   });
 });

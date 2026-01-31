@@ -58,6 +58,9 @@ export async function check(extractOptions?: ExtractUsagesOptions) {
         rich: usages.rich.filter(
           (u) => resolveConfigKey(u.configKey, defaultConfigKey) === configKey,
         ),
+        trans: usages.trans.filter(
+          (u) => resolveConfigKey(u.configKey, defaultConfigKey) === configKey,
+        ),
       };
 
       // Diagnostic

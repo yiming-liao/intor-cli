@@ -121,7 +121,7 @@ describe("validateMissingReplacements", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "greeting",
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.message(["name"]),
@@ -157,7 +157,7 @@ describe("validateMissingReplacements", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "home.greeting",
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.message(["name"]),

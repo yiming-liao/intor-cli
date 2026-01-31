@@ -27,7 +27,7 @@ export function replacementsNotAllowed(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_NOT_ALLOWED.code,
         message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_NOT_ALLOWED.message(),

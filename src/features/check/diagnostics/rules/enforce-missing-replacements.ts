@@ -41,7 +41,7 @@ export function enforceMissingReplacements(
 
   diagnostics.push({
     severity: "warn",
-    method,
+    origin: method,
     messageKey: keyPath,
     code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
     message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.message(expected),

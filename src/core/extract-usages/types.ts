@@ -52,10 +52,16 @@ export interface RichUsage extends TranslatorBinding, SourceLocation {
   preKey?: string;
 }
 
+export interface TransUsage extends SourceLocation {
+  key: string;
+  configKey?: string;
+}
+
 /** Aggregated static translator usages extracted from a project. */
 export interface ExtractedUsages {
   preKey: PreKeyUsage[];
   key: KeyUsage[];
   replacement: ReplacementUsage[];
   rich: RichUsage[];
+  trans: TransUsage[];
 }

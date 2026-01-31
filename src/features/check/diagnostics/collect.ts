@@ -1,5 +1,6 @@
 import type { Diagnostic } from "./types";
 import type { ExtractedUsages, InferredSchemas } from "../../../core";
+import type { KeyUsageLike } from "./rules/key/types";
 import { enforceMissingReplacements } from "./rules/enforce-missing-replacements";
 import { enforceMissingRich } from "./rules/enforce-missing-rich";
 import { keyEmpty, keyNotFound } from "./rules/key";
@@ -18,13 +19,24 @@ export function collectDiagnostics(
 ) {
   const diagnostics: Diagnostic[] = [];
 
+  const allKeyUsages: KeyUsageLike[] = [
+    ...usages.key.map((u) => ({ ...u, origin: u.method })),
+    ...usages.trans.map((u) => ({
+      origin: "<Trans />",
+      key: u.key,
+      file: u.file,
+      line: u.line,
+      column: u.column,
+    })),
+  ];
+
   // PreKey
   for (const usage of usages.preKey) {
     diagnostics.push(...preKeyNotFound(usage, messagesSchema));
   }
 
   // Key
-  for (const usage of usages.key) {
+  for (const usage of allKeyUsages) {
     diagnostics.push(...keyNotFound(usage, messagesSchema), ...keyEmpty(usage));
   }
 

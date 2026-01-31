@@ -25,7 +25,7 @@ export function preKeyNotFound(
     return [
       {
         severity: "warn",
-        factory,
+        origin: factory,
         messageKey: preKey,
         code: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.code,
         message: DIAGNOSTIC_MESSAGES.PRE_KEY_NOT_FOUND.message(),

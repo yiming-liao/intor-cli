@@ -111,7 +111,7 @@ describe("validateMissingRich", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "greeting",
         code: DIAGNOSTIC_MESSAGES.RICH_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.RICH_MISSING.message(["a"]),
@@ -147,7 +147,7 @@ describe("validateMissingRich", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "home.greeting",
         code: DIAGNOSTIC_MESSAGES.RICH_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.RICH_MISSING.message(["a"]),

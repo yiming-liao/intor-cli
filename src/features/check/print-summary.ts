@@ -13,9 +13,9 @@ export function printSummary(configId: string, grouped: DiagnosticGroup[]) {
 
   // Problems
   for (const group of grouped) {
-    const { factory, method, messageKey, problems, file, lines } = group;
+    const { origin, messageKey, problems, file, lines } = group;
 
-    const header = `${messageKey} (${method ?? factory})`;
+    const header = `${messageKey} (${origin})`;
 
     print(header, 1);
     printList(

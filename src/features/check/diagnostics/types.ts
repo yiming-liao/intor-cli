@@ -1,9 +1,6 @@
-import type { TranslatorFactory, TranslatorMethod } from "../../../core";
-
 export interface Diagnostic {
   severity: "error" | "warn";
-  factory?: TranslatorFactory;
-  method?: TranslatorMethod;
+  origin: string;
   messageKey: string;
   code: string;
   message: string;
@@ -14,8 +11,7 @@ export interface Diagnostic {
 
 export interface DiagnosticGroup {
   severity: "error" | "warn";
-  factory?: TranslatorFactory;
-  method?: TranslatorMethod;
+  origin: string;
   messageKey: string;
   problems: string[]; // list of bullet messages
   file: string;

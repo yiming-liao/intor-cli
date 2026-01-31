@@ -32,7 +32,7 @@ export function richUnused(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.RICH_UNUSED.code,
         message: DIAGNOSTIC_MESSAGES.RICH_UNUSED.message(extra),

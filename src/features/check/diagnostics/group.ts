@@ -8,16 +8,8 @@ export function groupDiagnostics(diagnostics: Diagnostic[]): DiagnosticGroup[] {
   const map = new Map<string, DiagnosticGroup>();
 
   for (const diagnostic of diagnostics) {
-    const {
-      severity,
-      factory,
-      method,
-      message,
-      messageKey,
-      file,
-      line,
-      column,
-    } = diagnostic;
+    const { severity, origin, message, messageKey, file, line, column } =
+      diagnostic;
 
     // --------------------------------------------------
     // Grouping key
@@ -25,15 +17,14 @@ export function groupDiagnostics(diagnostics: Diagnostic[]): DiagnosticGroup[] {
     // - Fallback to exact source location
     // --------------------------------------------------
     const groupId = messageKey
-      ? `${file}::${messageKey}::${diagnostic.method}`
+      ? `${file}::${messageKey}::${origin}`
       : `${file}::${line}:${column}`;
 
     // Initialize group if not exists
     if (!map.has(groupId)) {
       map.set(groupId, {
         severity,
-        factory,
-        method,
+        origin,
         messageKey,
         problems: [],
         file,

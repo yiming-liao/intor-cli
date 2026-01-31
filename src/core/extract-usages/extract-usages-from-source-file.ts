@@ -1,4 +1,11 @@
-import type { ExtractedUsages, PreKeyMap } from "./types";
+import type {
+  ExtractedUsages,
+  KeyUsage,
+  PreKeyMap,
+  PreKeyUsage,
+  ReplacementUsage,
+  RichUsage,
+} from "./types";
 import type { SourceFile } from "ts-morph";
 import {
   collectTranslatorBindings,
@@ -6,6 +13,7 @@ import {
   collectReplacementUsages,
   collectRichUsages,
   collectPreKeys,
+  collectTransUsages,
 } from "./collectors";
 
 function attachPreKey<T extends { localName: string; preKey?: string }>(
@@ -25,48 +33,60 @@ export function extractUsagesFromSourceFile(
   sourceFile: SourceFile,
 ): ExtractedUsages {
   // -----------------------------------------------------------------------
-  // Translator binding
+  // Trans component usages (independent of translator bindings)
+  // -----------------------------------------------------------------------
+  const transUsages = collectTransUsages(sourceFile);
+
+  // -----------------------------------------------------------------------
+  // Translator binding (function-based APIs)
   // -----------------------------------------------------------------------
   const translatorBindingMap = collectTranslatorBindings(sourceFile);
-  if (translatorBindingMap.size === 0) {
-    return { preKey: [], key: [], replacement: [], rich: [] };
+
+  // Prepare defaults
+  let keyUsages: KeyUsage[] = [];
+  let replacementUsages: ReplacementUsage[] = [];
+  let richUsages: RichUsage[] = [];
+  let preKeyUsages: PreKeyUsage[] = [];
+
+  if (translatorBindingMap.size > 0) {
+    // ---------------------------------------------------------------------
+    // Key usages
+    // ---------------------------------------------------------------------
+    keyUsages = collectKeyUsages(sourceFile, translatorBindingMap);
+
+    // ---------------------------------------------------------------------
+    // Replacement usages
+    // ---------------------------------------------------------------------
+    replacementUsages = collectReplacementUsages(
+      sourceFile,
+      translatorBindingMap,
+    );
+
+    // ---------------------------------------------------------------------
+    // Rich usages
+    // ---------------------------------------------------------------------
+    richUsages = collectRichUsages(sourceFile, translatorBindingMap);
+
+    // ---------------------------------------------------------------------
+    // PreKey values
+    // ---------------------------------------------------------------------
+    const { preKeyMap, usages } = collectPreKeys(
+      sourceFile,
+      translatorBindingMap,
+    );
+
+    attachPreKey(keyUsages, preKeyMap);
+    attachPreKey(replacementUsages, preKeyMap);
+    attachPreKey(richUsages, preKeyMap);
+
+    preKeyUsages = usages;
   }
 
-  // -----------------------------------------------------------------------
-  // Key usages
-  // -----------------------------------------------------------------------
-  const keyUsages = collectKeyUsages(sourceFile, translatorBindingMap);
-
-  // -----------------------------------------------------------------------
-  // Replacement usages
-  // -----------------------------------------------------------------------
-  const replacementUsages = collectReplacementUsages(
-    sourceFile,
-    translatorBindingMap,
-  );
-
-  // -----------------------------------------------------------------------
-  // Rich usages
-  // -----------------------------------------------------------------------
-  const richUsages = collectRichUsages(sourceFile, translatorBindingMap);
-
-  // -----------------------------------------------------------------------
-  // PreKey values
-  // -----------------------------------------------------------------------
-  const { preKeyMap, usages } = collectPreKeys(
-    sourceFile,
-    translatorBindingMap,
-  );
-
-  // Attach preKey to all usages that support it
-  attachPreKey(keyUsages, preKeyMap);
-  attachPreKey(replacementUsages, preKeyMap);
-  attachPreKey(richUsages, preKeyMap);
-
   return {
-    preKey: usages,
+    preKey: preKeyUsages,
     key: keyUsages,
     replacement: replacementUsages,
     rich: richUsages,
+    trans: transUsages,
   };
 }

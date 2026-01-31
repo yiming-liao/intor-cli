@@ -1,12 +1,12 @@
 import type { KeyUsage } from "../../../../../../../src/core/extract-usages";
+import type { KeyUsageLike } from "../../../../../../../src/features/check/diagnostics/rules/key/types";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../../src/features/check/diagnostics/messages";
 import { keyEmpty } from "../../../../../../../src/features/check/diagnostics/rules/key";
 
-function createUsage(partial: Partial<KeyUsage>): KeyUsage {
+function createUsage(partial: Partial<KeyUsage>): KeyUsageLike {
   return {
-    factory: "useTranslator",
-    method: "t",
+    origin: "t",
     localName: "t",
     key: "",
     file: "/test.ts",
@@ -22,7 +22,7 @@ describe("keyEmpty", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "",
         code: DIAGNOSTIC_MESSAGES.KEY_EMPTY.code,
         message: DIAGNOSTIC_MESSAGES.KEY_EMPTY.message(),

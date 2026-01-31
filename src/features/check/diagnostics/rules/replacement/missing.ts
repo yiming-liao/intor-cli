@@ -32,7 +32,7 @@ export function replacementsMissing(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_MISSING.message(missing),

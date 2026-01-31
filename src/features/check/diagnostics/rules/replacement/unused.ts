@@ -32,7 +32,7 @@ export function replacementsUnused(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.REPLACEMENTS_UNUSED.code,
         message: DIAGNOSTIC_MESSAGES.REPLACEMENTS_UNUSED.message(extra),

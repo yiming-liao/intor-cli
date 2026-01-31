@@ -6,7 +6,10 @@ import { loadSourceFilesFromTsconfig } from "./load-source-files-from-tscofnig";
 
 /** Check whether a file-level extraction produced any meaningful usage */
 const isEmpty = (u: ExtractedUsages) =>
-  u.key.length === 0 && u.replacement.length === 0 && u.rich.length === 0;
+  u.key.length === 0 &&
+  u.replacement.length === 0 &&
+  u.rich.length === 0 &&
+  u.trans.length === 0;
 
 export interface ExtractUsagesOptions {
   tsconfigPath?: string;
@@ -25,6 +28,7 @@ export function extractUsages(options?: ExtractUsagesOptions): ExtractedUsages {
     key: [],
     replacement: [],
     rich: [],
+    trans: [],
   };
 
   // Debug counters
@@ -52,6 +56,7 @@ export function extractUsages(options?: ExtractUsagesOptions): ExtractedUsages {
     result.key.push(...partial.key);
     result.replacement.push(...partial.replacement);
     result.rich.push(...partial.rich);
+    result.trans.push(...partial.trans);
   }
 
   // Debug summary

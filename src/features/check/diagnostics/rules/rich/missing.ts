@@ -32,7 +32,7 @@ export function richMissing(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.RICH_MISSING.code,
         message: DIAGNOSTIC_MESSAGES.RICH_MISSING.message(missing),

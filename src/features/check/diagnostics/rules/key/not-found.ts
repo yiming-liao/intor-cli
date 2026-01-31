@@ -1,4 +1,5 @@
-import type { KeyUsage, InferNode } from "../../../../../core";
+import type { KeyUsageLike } from "./types";
+import type { InferNode } from "../../../../../core";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
 import { getSchemaNodeAtPath } from "../../utils/get-schema-node-at-path";
@@ -15,10 +16,10 @@ import { resolveKeyPath } from "../../utils/resolve-key-path";
  * ```
  */
 export function keyNotFound(
-  usage: KeyUsage,
+  usage: KeyUsageLike,
   messagesSchema: InferNode,
 ): Diagnostic[] {
-  const { method, key, preKey, file, line, column } = usage;
+  const { origin, key, preKey, file, line, column } = usage;
 
   if (!key) return [];
 
@@ -27,7 +28,7 @@ export function keyNotFound(
     return [
       {
         severity: "warn",
-        method,
+        origin,
         messageKey: key,
         code: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.code,
         message: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.message(),

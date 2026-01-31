@@ -27,7 +27,7 @@ export function richNotAllowed(
     return [
       {
         severity: "warn",
-        method,
+        origin: method,
         messageKey: keyPath,
         code: DIAGNOSTIC_MESSAGES.RICH_NOT_ALLOWED.code,
         message: DIAGNOSTIC_MESSAGES.RICH_NOT_ALLOWED.message(),

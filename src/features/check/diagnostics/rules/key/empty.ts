@@ -1,4 +1,4 @@
-import type { KeyUsage } from "../../../../../core";
+import type { KeyUsageLike } from "./types";
 import type { Diagnostic } from "../../types";
 import { DIAGNOSTIC_MESSAGES } from "../../messages";
 
@@ -12,14 +12,14 @@ import { DIAGNOSTIC_MESSAGES } from "../../messages";
  * t("")
  * ```
  */
-export function keyEmpty(usage: KeyUsage): Diagnostic[] {
-  const { method, key, file, line, column } = usage;
+export function keyEmpty(usage: KeyUsageLike): Diagnostic[] {
+  const { origin, key, file, line, column } = usage;
 
   if (!key) {
     return [
       {
         severity: "warn",
-        method,
+        origin,
         messageKey: key,
         code: DIAGNOSTIC_MESSAGES.KEY_EMPTY.code,
         message: DIAGNOSTIC_MESSAGES.KEY_EMPTY.message(),

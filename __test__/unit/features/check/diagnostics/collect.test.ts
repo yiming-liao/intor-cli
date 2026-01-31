@@ -72,7 +72,7 @@ describe("collectDiagnostics", () => {
     vi.clearAllMocks();
   });
 
-  it("collects diagnostics from all rule groups", () => {
+  it("collects diagnostics from all rule groups, but enforces only on t / tRich", () => {
     const d = (id: string): Diagnostic => ({ id }) as any;
     vi.mocked(preKeyNotFound).mockReturnValue([d("preKey")]);
     vi.mocked(keyNotFound).mockReturnValue([d("keyNotFound")]);
@@ -87,7 +87,8 @@ describe("collectDiagnostics", () => {
     vi.mocked(enforceMissingRich).mockReturnValue([d("enforceRich")]);
     const usages: ExtractedUsages = {
       preKey: [{} as any],
-      key: [{} as any],
+      key: [{ method: "t" } as any],
+      trans: [{ key: "home.title" } as any],
       replacement: [{} as any],
       rich: [{} as any],
     };
@@ -101,23 +102,31 @@ describe("collectDiagnostics", () => {
     );
     expect(result.map((d) => (d as any).id)).toEqual([
       "preKey",
+      // key-level rules: t
       "keyNotFound",
       "keyEmpty",
+      // key-level rules: <Trans />
+      "keyNotFound",
+      "keyEmpty",
+      // replacement
       "repNotAllowed",
       "repMissing",
       "repUnused",
+      // rich
       "richNotAllowed",
       "richMissing",
       "richUnused",
+      // enforce (ONLY once, for t)
       "enforceRep",
       "enforceRich",
     ]);
   });
 
-  it("does not call enforce rules when there are no key usages", () => {
+  it("does not call enforce rules when there are no t / tRich usages", () => {
     const usages: ExtractedUsages = {
       preKey: [],
       key: [],
+      trans: [{ key: "home.title" } as any],
       replacement: [],
       rich: [],
     };

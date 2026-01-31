@@ -35,6 +35,7 @@ const empty: ExtractedUsages = {
   key: [],
   replacement: [],
   rich: [],
+  trans: [],
 };
 
 describe("extractUsages", () => {
@@ -52,7 +53,7 @@ describe("extractUsages", () => {
     );
   });
 
-  it("skips files whose file-level extraction is empty", () => {
+  it("skips files whose file-level extraction is fully empty", () => {
     const files = [mockSourceFile("a.ts"), mockSourceFile("b.ts")];
     vi.mocked(loadSourceFilesFromTsconfig).mockReturnValue(files);
     vi.mocked(extractUsagesFromSourceFile).mockReturnValue(empty);
@@ -61,7 +62,7 @@ describe("extractUsages", () => {
     expect(extractUsagesFromSourceFile).toHaveBeenCalledTimes(2);
   });
 
-  it("merges usages from multiple source files", () => {
+  it("merges usages from multiple source files including trans usages", () => {
     const files = [mockSourceFile("a.ts"), mockSourceFile("b.ts")];
     vi.mocked(loadSourceFilesFromTsconfig).mockReturnValue(files);
     vi.mocked(extractUsagesFromSourceFile)
@@ -70,18 +71,21 @@ describe("extractUsages", () => {
         key: [{ key: "title" } as any],
         replacement: [],
         rich: [],
+        trans: [{ key: "home.title" } as any],
       })
       .mockReturnValueOnce({
         preKey: [],
         key: [],
         replacement: [{ key: "count" } as any],
         rich: [{ key: "content" } as any],
+        trans: [{ key: "profile.name" } as any],
       });
     const result = extractUsages();
     expect(result.preKey).toHaveLength(1);
     expect(result.key).toHaveLength(1);
     expect(result.replacement).toHaveLength(1);
     expect(result.rich).toHaveLength(1);
+    expect(result.trans).toHaveLength(2);
   });
 
   it("passes custom tsconfigPath and debug flag", () => {

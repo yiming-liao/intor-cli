@@ -1,13 +1,13 @@
 import type { KeyUsage } from "../../../../../../../src/core/extract-usages";
 import type { InferNode } from "../../../../../../../src/core/infer-schema";
+import type { KeyUsageLike } from "../../../../../../../src/features/check/diagnostics/rules/key/types";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../../src/features/check/diagnostics/messages";
 import { keyNotFound } from "../../../../../../../src/features/check/diagnostics/rules/key";
 
-function createUsage(partial: Partial<KeyUsage>): KeyUsage {
+function createUsage(partial: Partial<KeyUsage>): KeyUsageLike {
   return {
-    factory: "useTranslator",
-    method: "t",
+    origin: "t",
     localName: "t",
     key: "",
     file: "/test.ts",
@@ -29,7 +29,7 @@ describe("keyNotFound", () => {
     expect(diagnostics).toEqual([
       {
         severity: "warn",
-        method: "t",
+        origin: "t",
         messageKey: "missing",
         code: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.code,
         message: DIAGNOSTIC_MESSAGES.KEY_NOT_FOUND.message(),
