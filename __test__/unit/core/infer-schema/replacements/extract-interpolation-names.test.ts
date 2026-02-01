@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-sort */
 import { describe, it, expect } from "vitest";
 import { extractInterpolationNames } from "../../../../../src/core/infer-schema/replacements/extract-interpolation-names";
 

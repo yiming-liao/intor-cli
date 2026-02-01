@@ -2,7 +2,7 @@
 import type { SourceFile } from "ts-morph";
 import fs from "node:fs";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { loadSourceFilesFromTsconfig } from "../../../../src/core/extract-usages/load-source-files-from-tscofnig";
+import { loadSourceFiles } from "../../../../src/core/scan";
 
 vi.mock("node:fs", () => ({
   default: {
@@ -37,7 +37,7 @@ describe("loadSourceFilesFromTsconfig", () => {
   it("returns source files directly when tsconfig contains files", () => {
     const files = [mockSourceFile("a.ts"), mockSourceFile("b.ts")];
     mockGetSourceFiles = () => files;
-    const result = loadSourceFilesFromTsconfig(tsconfigPath, false);
+    const result = loadSourceFiles(tsconfigPath, false);
     expect(result).toEqual(files);
   });
 
@@ -54,7 +54,7 @@ describe("loadSourceFilesFromTsconfig", () => {
       }),
     );
     (fs.existsSync as any).mockReturnValue(true);
-    const result = loadSourceFilesFromTsconfig(tsconfigPath, false);
+    const result = loadSourceFiles(tsconfigPath, false);
     expect(result).toHaveLength(1);
     expect(result[0].getFilePath()).toBe("ref.ts");
   });
@@ -67,14 +67,14 @@ describe("loadSourceFilesFromTsconfig", () => {
       }),
     );
     (fs.existsSync as any).mockReturnValue(false);
-    const result = loadSourceFilesFromTsconfig(tsconfigPath, false);
+    const result = loadSourceFiles(tsconfigPath, false);
     expect(result).toEqual([]);
   });
 
   it("returns empty array when no source files and no references", () => {
     mockGetSourceFiles = () => [];
     (fs.readFileSync as any).mockReturnValue(JSON.stringify({}));
-    const result = loadSourceFilesFromTsconfig(tsconfigPath, false);
+    const result = loadSourceFiles(tsconfigPath, false);
     expect(result).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { bold, br, dim, gray, green, italic, print } from "../print";
+import { bold, br, dim, gray, green, italic, print } from "../shared/print";
 
 const label = (text: string) => dim(text.padEnd(18));
 

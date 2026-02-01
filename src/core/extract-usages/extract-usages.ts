@@ -1,8 +1,8 @@
 import type { ExtractedUsages } from "./types";
-import pc from "picocolors";
-import { createLogger } from "../scan-logger";
+import type { SourceFile } from "ts-morph";
+import { yellow } from "../../features/shared/print";
+import { createScanLogger } from "../scan";
 import { extractUsagesFromSourceFile } from "./extract-usages-from-source-file";
-import { loadSourceFilesFromTsconfig } from "./load-source-files-from-tscofnig";
 
 /** Check whether a file-level extraction produced any meaningful usage */
 const isEmpty = (u: ExtractedUsages) =>
@@ -12,16 +12,19 @@ const isEmpty = (u: ExtractedUsages) =>
   u.trans.length === 0;
 
 export interface ExtractUsagesOptions {
-  tsconfigPath?: string;
+  sourceFiles?: SourceFile[];
   debug?: boolean;
 }
 
 /**
  * Extract all static translator usages from a TypeScript project.
  */
-export function extractUsages(options?: ExtractUsagesOptions): ExtractedUsages {
-  const { tsconfigPath = "tsconfig.json", debug = false } = options || {};
-  const log = createLogger(debug);
+export function extractUsages({
+  sourceFiles = [],
+  debug = false,
+}: ExtractUsagesOptions = {}): ExtractedUsages {
+  const logger = createScanLogger(debug, "Extract usages");
+  logger.header(`processing ${yellow(sourceFiles.length)} source files`);
 
   const result: ExtractedUsages = {
     preKey: [],
@@ -35,36 +38,37 @@ export function extractUsages(options?: ExtractUsagesOptions): ExtractedUsages {
   let scannedFiles = 0;
   let matchedFiles = 0;
 
-  const sourceFiles = loadSourceFilesFromTsconfig(tsconfigPath, debug);
-
   // Process each source file independently
   for (const sourceFile of sourceFiles) {
     scannedFiles++;
-    log("scan", sourceFile.getFilePath());
 
     // ---------------------------------------------------------------------------
     // File-level extraction (pure analysis, no side effects)
     // ---------------------------------------------------------------------------
-    const partial = extractUsagesFromSourceFile(sourceFile);
-    if (isEmpty(partial)) continue;
+    const partialUsages = extractUsagesFromSourceFile(sourceFile);
+
+    if (isEmpty(partialUsages)) {
+      logger.log("skip", sourceFile.getFilePath());
+      continue;
+    }
+
+    logger.log("ok", sourceFile.getFilePath());
     matchedFiles++;
 
     // ---------------------------------------------------------------------------
     // Merge file-level results into the project-level result
     // ---------------------------------------------------------------------------
-    result.preKey.push(...partial.preKey);
-    result.key.push(...partial.key);
-    result.replacement.push(...partial.replacement);
-    result.rich.push(...partial.rich);
-    result.trans.push(...partial.trans);
+    result.preKey.push(...partialUsages.preKey);
+    result.key.push(...partialUsages.key);
+    result.replacement.push(...partialUsages.replacement);
+    result.rich.push(...partialUsages.rich);
+    result.trans.push(...partialUsages.trans);
   }
 
-  // Debug summary
-  if (debug) {
-    console.log(
-      pc.dim(` › Scanned ${scannedFiles} files, matched ${matchedFiles} \n`),
-    );
-  }
-
+  logger.footer(
+    `scanned ${yellow(scannedFiles)} files, extracted from ${yellow(
+      matchedFiles,
+    )} file(s)`,
+  );
   return result;
 }

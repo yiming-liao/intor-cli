@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable unicorn/consistent-function-scoping */
 
 import fs from "node:fs";
@@ -65,7 +66,7 @@ describe("discoverConfigs", () => {
     expect(result[0].config.id).toBe("my-intor");
   });
 
-  it("ignores exports that are not IntorResolvedConfig", async () => {
+  it("returns empty array when no usable Intor config export is found", async () => {
     vi.mocked(fg).mockResolvedValue(["a.ts"]);
     vi.spyOn(fs.promises, "readFile").mockResolvedValue("export const x = {}");
     vi.mocked(isIntorResolvedConfig).mockReturnValue(false);
@@ -82,5 +83,48 @@ describe("discoverConfigs", () => {
     vi.mocked(loadModule).mockRejectedValue(new Error("import failed"));
     const result = await discoverConfigs();
     expect(result).toEqual([]);
+  });
+
+  it("ignores duplicate config ids across files", async () => {
+    vi.mocked(fg).mockResolvedValue(["a.ts", "b.ts"]);
+    vi.spyOn(fs.promises, "readFile").mockResolvedValue(
+      "export const config = defineIntorConfig({})",
+    );
+    vi.mocked(isIntorResolvedConfig).mockReturnValue(true);
+    vi.mocked(loadModule)
+      .mockResolvedValueOnce({
+        config: {
+          id: "my-intor",
+          defaultLocale: "en",
+          supportedLocales: ["en"],
+        },
+      })
+      .mockResolvedValueOnce({
+        config: {
+          id: "my-intor",
+          defaultLocale: "en",
+          supportedLocales: ["en"],
+        },
+      });
+    const result = await discoverConfigs();
+    expect(result).toHaveLength(1);
+    expect(result[0].config.id).toBe("my-intor");
+  });
+
+  it("skips non-Intor exports and continues scanning other exports", async () => {
+    vi.mocked(fg).mockResolvedValue(["a.ts"]);
+    vi.spyOn(fs.promises, "readFile").mockResolvedValue(
+      "export const foo = {}; export const config = defineIntorConfig({})",
+    );
+    vi.mocked(isIntorResolvedConfig).mockImplementation(
+      (v) => (v as any)?.id === "my-intor",
+    );
+    vi.mocked(loadModule).mockResolvedValue({
+      foo: {},
+      config: { id: "my-intor", defaultLocale: "en", supportedLocales: ["en"] },
+    });
+    const result = await discoverConfigs();
+    expect(result).toHaveLength(1);
+    expect(result[0].config.id).toBe("my-intor");
   });
 });

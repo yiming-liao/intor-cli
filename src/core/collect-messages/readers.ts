@@ -22,6 +22,7 @@ export const getBuiltInReaders = (
       return reader ? [ext, reader] : null;
     })
     .filter((e): e is [ExtraExt, MessagesReader] => e !== null);
+
   // Entries to object
   return Object.fromEntries(entries);
 };

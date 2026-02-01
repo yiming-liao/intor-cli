@@ -16,6 +16,7 @@ export const unicornConfig = [
       "unicorn/no-nested-ternary": "off",
       "unicorn/no-useless-undefined": "off",
       "unicorn/prefer-type-error": "off",
+      "unicorn/no-array-sort": "off",
     },
   },
 ];

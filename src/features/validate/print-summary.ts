@@ -1,5 +1,5 @@
 import type { ValidationResult } from "./validate-locale-messages";
-import { italic, dim, printList, cyan, br, print, gray } from "../print";
+import { italic, dim, printList, cyan, br, print, gray } from "../shared/print";
 
 function hasValidationIssue(result: ValidationResult): boolean {
   return (

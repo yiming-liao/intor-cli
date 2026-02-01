@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Project, type SourceFile } from "ts-morph";
-import { createLogger } from "../scan-logger";
+import { yellow } from "../../features/shared/print";
+import { createScanLogger } from "./scan-logger";
 
 /**
  * Load source files from a tsconfig.
@@ -16,47 +17,58 @@ import { createLogger } from "../scan-logger";
  *   where the root tsconfig only contains references.
  * - References are followed non-recursively on purpose.
  */
-export function loadSourceFilesFromTsconfig(
+export function loadSourceFiles(
   tsconfigPath: string,
-  debug: boolean,
+  debug?: boolean,
 ): SourceFile[] {
-  const log = createLogger(debug);
+  const logger = createScanLogger(debug, "Load source files");
+  logger.header("processing tsconfig");
+
   // ---------------------------------------------------------------------------
-  // 1. Try loading source files directly from the given tsconfig
+  // Try loading source files directly from the given tsconfig
   // ---------------------------------------------------------------------------
   const project = new Project({ tsConfigFilePath: tsconfigPath });
   const files = project.getSourceFiles();
-  if (files.length > 0) return files;
+  if (files.length > 0) {
+    logger.footer(`loaded ${yellow(files.length)} files`);
+    return files;
+  }
 
   // ---------------------------------------------------------------------------
-  // 2. No source files found → attempt to follow project references
+  // No source files found, attempt to follow project references
   // ---------------------------------------------------------------------------
   const configDir = path.dirname(tsconfigPath);
-  const rawConfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
-  const references: { path: string }[] = rawConfig.references ?? [];
+  const rawTsConfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
 
-  if (references.length === 0) return [];
-  log("info", `no source files found, following project references`);
+  // Project references (e.g. { references: [ { path: "./tsconfig.app.json" } ] })
+  const references: { path: string }[] = rawTsConfig.references ?? [];
+  if (references.length === 0) {
+    logger.footer("no source files found");
+    return [];
+  }
+
+  logger.log("load", `references (${references.length})`);
 
   // ---------------------------------------------------------------------------
-  // 3. Load source files from each referenced tsconfig
+  // Load source files from each referenced tsconfig
   // ---------------------------------------------------------------------------
   const collected: SourceFile[] = [];
 
   for (const ref of references) {
-    const refPath = path.resolve(configDir, ref.path);
+    const refPath = path.relative(configDir, ref.path);
 
     // Skip missing referenced tsconfig files
     if (!fs.existsSync(refPath)) {
-      log("warn", `referenced tsconfig not found: ${refPath}`);
+      logger.log("warn", `referenced tsconfig not found: ${refPath}`);
       continue;
     }
 
-    log("ref ", `${path.relative(process.cwd(), refPath)}`);
+    logger.log("load", `${path.relative(process.cwd(), refPath)}`);
 
     const refProject = new Project({ tsConfigFilePath: refPath });
     collected.push(...refProject.getSourceFiles());
   }
 
+  logger.footer(`loaded ${yellow(collected.length)} files`);
   return collected;
 }

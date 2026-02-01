@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-sort */
 import type { MessageObject } from "intor";
 import path from "node:path";
 import { DEFAULT_OUT_DIR, DEFAULT_MESSAGES_SNAPSHOT_DIR } from "../constants";

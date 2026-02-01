@@ -1,8 +1,9 @@
 import type { MergeOverrides } from "../../core/collect-messages/types";
-import { dim, gray, print, br } from "../print";
-import { spinner } from "../spinner";
+import { dim, gray, print, br } from "../shared/print";
 
-export function printOverrides(overrides: MergeOverrides[]) {
+export function printOverrides(configId: string, overrides: MergeOverrides[]) {
+  br();
+
   // Group overrides by layer
   const grouped = groupOverrides(overrides);
 
@@ -11,17 +12,14 @@ export function printOverrides(overrides: MergeOverrides[]) {
     grouped.runtime_over_static.length > 0;
   if (!hasAny) return;
 
-  spinner.stop();
-
   // Print title
-  print(dim("Overrides:"), 1);
+  print(`${configId} ${dim("Overrides:")}`, 1);
 
   // Print layer group
   printLayerGroup("client > server", grouped.client_over_server);
   printLayerGroup("runtime > static", grouped.runtime_over_static);
 
   br();
-  spinner.start();
 }
 
 function groupOverrides(overrides: MergeOverrides[]) {

@@ -1,11 +1,10 @@
-import type { ExtraExt } from "../constants";
+import type { ReaderOptions } from "./types";
 import type { IntorResolvedConfig, MessageObject } from "intor";
 import { collectRuntimeMessages } from "./collect-runtime-messages";
 
 export async function collectOtherLocaleMessages(
   config: IntorResolvedConfig,
-  exts: Array<ExtraExt> = [],
-  customReaders?: Record<string, string>,
+  { exts, customReaders }: ReaderOptions,
 ): Promise<Record<string, MessageObject>> {
   const { supportedLocales, defaultLocale } = config;
 
@@ -14,12 +13,11 @@ export async function collectOtherLocaleMessages(
   for (const locale of supportedLocales) {
     if (locale === defaultLocale) continue;
 
-    const { messages } = await collectRuntimeMessages(
-      config,
-      locale,
+    const { messages } = await collectRuntimeMessages(config, locale, {
       exts,
       customReaders,
-    );
+    });
+
     result[locale] = messages[locale];
   }
 

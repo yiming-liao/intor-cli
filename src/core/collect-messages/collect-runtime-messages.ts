@@ -1,5 +1,8 @@
-import type { CollectRuntimeMessagesResult, MergeOverrides } from "./types";
-import type { ExtraExt } from "../../core";
+import type {
+  ReaderOptions,
+  CollectRuntimeMessagesResult,
+  MergeOverrides,
+} from "./types";
 import {
   mergeMessages,
   resolveLoaderOptions,
@@ -19,8 +22,7 @@ import { resolveMessagesReader } from "./resolve-messages-reader";
 export async function collectRuntimeMessages(
   config: IntorResolvedConfig,
   locale: string,
-  exts: Array<ExtraExt> = [],
-  customReaders?: Record<string, string>, // {ext, customReaderFilePath}
+  { exts = [], customReaders }: ReaderOptions,
 ): Promise<CollectRuntimeMessagesResult> {
   // ----------------------------------------------------------------------
   // Resolve readers

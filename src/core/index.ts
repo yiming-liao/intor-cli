@@ -1,10 +1,12 @@
 // discover-configs
-export { discoverConfigs } from "./discover-configs";
+export { discoverConfigs, type ConfigEntry } from "./discover-configs";
 
 // collect-messages
 export {
   collectRuntimeMessages,
   collectOtherLocaleMessages,
+  type ReaderOptions,
+  type MergeOverrides,
 } from "./collect-messages";
 
 // infer-schema
@@ -28,13 +30,13 @@ export {
   type RichUsage,
 } from "./extract-usages";
 
-// generated
+// artifacts
 export {
   writeTypes,
   writeSchema,
   readSchema,
   writeMessagesSnapshot,
-} from "./generated";
+} from "./artifacts";
 
 // constants
 export { DEFAULT_OUT_DIR, EXTRA_EXTS, type ExtraExt } from "./constants";

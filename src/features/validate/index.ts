@@ -1,1 +1,1 @@
-export { validate } from "./validate";
+export { validate, type ValidateOptions } from "./validate";

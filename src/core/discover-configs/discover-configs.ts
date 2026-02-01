@@ -1,19 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import fg from "fast-glob";
 import { type IntorResolvedConfig } from "intor";
-import { createLogger } from "../scan-logger";
+import { bold, cyan, yellow } from "../../features/shared/print";
+import { scanFiles, createScanLogger } from "../scan";
 import { isIntorResolvedConfig } from "./is-intor-resolved-config";
 import { loadModule } from "./load-module";
-
-const DEFAULT_PATTERNS = ["**/*.{ts,js}"];
-const DEFAULT_IGNORE = [
-  "**/node_modules/**",
-  "**/dist/**",
-  "**/*.d.ts",
-  "**/*.test.*",
-  "**/*.test-d.ts",
-];
 
 export interface ConfigEntry {
   filePath: string;
@@ -22,13 +13,18 @@ export interface ConfigEntry {
 
 /**
  * Discover and resolve Intor configs from the current workspace.
+ *
+ * Notes:
+ * - Configs must be declared via `defineIntorConfig(...)`
+ * - Dynamic or computed configs are intentionally not supported
  */
 export async function discoverConfigs(debug?: boolean): Promise<ConfigEntry[]> {
-  const files = await fg(DEFAULT_PATTERNS, { ignore: DEFAULT_IGNORE });
-  const log = createLogger(debug);
-  log("scan", `found ${files.length} candidate files`);
+  const files = await scanFiles();
+  const logger = createScanLogger(debug, "Discover configs");
+  logger.header(bold(`scanning ${yellow(files.length)} candidate files`));
 
   const configEntries: ConfigEntry[] = [];
+  const seenIds = new Set<string>();
 
   // Iterate through candidate files
   for (const file of files) {
@@ -42,7 +38,7 @@ export async function discoverConfigs(debug?: boolean): Promise<ConfigEntry[]> {
     try {
       content = await fs.promises.readFile(absPath, "utf8");
     } catch {
-      log("warn", `failed to read ${relPath}`);
+      logger.log("warn", `failed to read ${relPath}`);
       continue;
     }
 
@@ -50,10 +46,10 @@ export async function discoverConfigs(debug?: boolean): Promise<ConfigEntry[]> {
     // Skip files that clearly do not define an Intor config
     // ----------------------------------------------------------------------
     if (!content.includes("defineIntorConfig(")) {
-      log("skip", `${relPath} (no defineIntorConfig)`);
+      logger.log("skip", `${relPath} (missing defineIntorConfig)`);
       continue;
     }
-    log("load", relPath);
+    logger.log("load", relPath);
 
     // ----------------------------------------------------------------------
     // Dynamic import & export inspection
@@ -61,28 +57,46 @@ export async function discoverConfigs(debug?: boolean): Promise<ConfigEntry[]> {
     try {
       const moduleExports = await loadModule(absPath);
       let matched = false;
+      let resolvedCount = 0;
 
+      // Loop through all exports
       for (const module of Object.values(moduleExports)) {
         const config = module as IntorResolvedConfig;
-        if (!isIntorResolvedConfig(config)) continue;
-
+        if (!isIntorResolvedConfig(module)) continue;
         matched = true;
 
+        // Ensure config ids are unique across the workspace
+        if (seenIds.has(module.id)) {
+          logger.log(
+            "warn",
+            `duplicate config id "${module.id}" (ignored, ${relPath})`,
+          );
+          continue;
+        }
+
+        seenIds.add(module.id);
+        resolvedCount++;
+
         configEntries.push({ filePath: absPath, config });
-        log(" ok ", `resolved config "${config.id}"`);
+        logger.log("ok", `resolved config ${cyan(config.id)}`);
       }
 
-      if (!matched) {
-        log("warn", `no valid Intor config export found in ${relPath}`);
+      if (matched && resolvedCount === 0) {
+        logger.log("warn", `no usable Intor config export (${relPath})`);
       }
     } catch {
-      log("warn", `failed to import ${relPath}`);
+      logger.log("warn", `failed to import module (${relPath})`);
     }
   }
 
   if (configEntries.length === 0) {
-    log("info", "no Intor config discovered");
+    logger.log("warn", "no Intor config discovered");
   }
 
-  return configEntries;
+  logger.footer(
+    `scanned ${yellow(files.length)} files, resolved ${yellow(
+      configEntries.length,
+    )} Intor config(s)`,
+  );
+  return configEntries.sort((a, b) => a.filePath.localeCompare(b.filePath));
 }

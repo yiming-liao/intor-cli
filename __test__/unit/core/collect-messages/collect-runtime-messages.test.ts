@@ -31,7 +31,7 @@ beforeEach(() => {
 describe("collectRuntimeMessages", () => {
   it("returns static messages when no loaders exist", async () => {
     const config = createConfig();
-    const result = await collectRuntimeMessages(config, "en");
+    const result = await collectRuntimeMessages(config, "en", {});
     expect(result.messages).toEqual({ en: { static: true } });
     expect(result.overrides).toEqual([]);
     expect(loadMessages).not.toHaveBeenCalled();
@@ -42,7 +42,7 @@ describe("collectRuntimeMessages", () => {
     vi.mocked(loadMessages).mockResolvedValueOnce({
       en: { server: true },
     });
-    const result = await collectRuntimeMessages(config, "en");
+    const result = await collectRuntimeMessages(config, "en", {});
     expect(loadMessages).toHaveBeenCalledTimes(1);
     expect(result.messages).toEqual({
       en: { static: true, server: true },
@@ -59,7 +59,7 @@ describe("collectRuntimeMessages", () => {
     vi.mocked(loadMessages)
       .mockResolvedValueOnce({ en: { server: true } })
       .mockResolvedValueOnce({ en: { client: true } });
-    const result = await collectRuntimeMessages(config, "en");
+    const result = await collectRuntimeMessages(config, "en", {});
     expect(loadMessages).toHaveBeenCalledTimes(2);
     expect(result.messages).toEqual({
       en: {
@@ -76,7 +76,7 @@ describe("collectRuntimeMessages", () => {
   it("passes resolved readers when exts are provided", async () => {
     const config = createConfig({ loader: true } as any);
     vi.mocked(loadMessages).mockResolvedValueOnce({ en: {} });
-    await collectRuntimeMessages(config, "en", ["md", "yaml"]);
+    await collectRuntimeMessages(config, "en", { exts: ["md", "yaml"] });
     const call = vi.mocked(loadMessages).mock.calls[0][0];
     expect(call.readers).toHaveProperty("md");
     expect(call.readers).toHaveProperty("yaml");
@@ -85,8 +85,9 @@ describe("collectRuntimeMessages", () => {
   it("resolves and passes custom readers", async () => {
     const config = createConfig({ loader: true } as any);
     vi.mocked(loadMessages).mockResolvedValueOnce({ en: {} });
-    await collectRuntimeMessages(config, "en", [], {
-      foo: "/custom/reader.ts",
+    await collectRuntimeMessages(config, "en", {
+      exts: [],
+      customReaders: { foo: "/custom/reader.ts" },
     });
     const call = vi.mocked(loadMessages).mock.calls[0][0];
     expect(call.readers).toHaveProperty("foo");
@@ -94,7 +95,7 @@ describe("collectRuntimeMessages", () => {
 
   it("skips server and client loaders when none are defined", async () => {
     const config = createConfig({ loader: false, client: undefined } as any);
-    const result = await collectRuntimeMessages(config, "en");
+    const result = await collectRuntimeMessages(config, "en", {});
     expect(result.messages).toEqual({ en: { static: true } });
     expect(result.overrides).toEqual([]);
     expect(loadMessages).not.toHaveBeenCalled();
