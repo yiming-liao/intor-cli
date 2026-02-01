@@ -1,26 +1,41 @@
 #!/usr/bin/env tsx
 
 import { cac } from "cac";
-import { registerCheckCommand } from "./commands/check";
-import { registerGenerateCommand } from "./commands/generate";
-import { registerValidateCommand } from "./commands/validate";
+import {
+  registerDiscoverCommand,
+  registerGenerateCommand,
+  registerCheckCommand,
+  registerValidateCommand,
+} from "./commands";
+import { run } from "./menu";
 
-const cli = cac("intor");
+const VERSION = "0.1.10";
 
-// ---------------------------------------------------------------------
-// Register commands
-// ---------------------------------------------------------------------
-registerGenerateCommand(cli);
-registerCheckCommand(cli);
-registerValidateCommand(cli);
+async function main() {
+  // argv = [node, script, ...args]
+  const args = process.argv.slice(2);
 
-// ---------------------------------------------------------------------
-// Global options / help
-// ---------------------------------------------------------------------
-cli.help();
-cli.version("0.1.10");
+  // -------------------------------------------------------------------
+  // Interactive menu bypasses CAC entirely
+  // -------------------------------------------------------------------
+  if (args.length === 0) {
+    await run();
+    return;
+  }
 
-// ---------------------------------------------------------------------
-// Parse argv
-// ---------------------------------------------------------------------
-cli.parse();
+  // -------------------------------------------------------------------
+  // Command mode (original CAC behavior)
+  // -------------------------------------------------------------------
+  const cli = cac("intor");
+
+  registerDiscoverCommand(cli);
+  registerGenerateCommand(cli);
+  registerCheckCommand(cli);
+  registerValidateCommand(cli);
+
+  cli.help();
+  cli.version(VERSION);
+  cli.parse(process.argv);
+}
+
+await main();

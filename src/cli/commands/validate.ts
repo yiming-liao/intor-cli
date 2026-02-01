@@ -1,6 +1,8 @@
-import type { ExtraExt } from "../../core";
+import type { CliOptions } from "./options/options";
 import type { CAC } from "cac";
+import { features } from "../../constants";
 import { validate } from "../../features";
+import { options } from "./options";
 import { normalizeReaderOptions } from "./utils/normalize-reader-options";
 
 export function registerValidateCommand(cli: CAC) {
@@ -8,43 +10,37 @@ export function registerValidateCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command("validate", "Validate intor locale translations")
+    .command(features.validate.name, features.validate.title)
 
     // -----------------------------------------------------------------------
     // Option
     // -----------------------------------------------------------------------
-    .option(
-      "--ext <ext>",
-      "Enable extra messages file extension (repeatable)",
-      { default: [] },
-    )
-    .option(
-      "--reader <mapping>",
-      "Custom reader mapping in the form <ext=path> (repeatable)",
-      { default: [] },
-    )
-    .option(
-      "--debug",
-      "Print debug information during config discovery and generation",
-    )
+    .option(...options.debug)
+    .option(...options.ext)
+    .option(...options.reader)
+    .option(...options.format)
+    .option(...options.output)
 
     // -----------------------------------------------------------------------
     // Action
     // -----------------------------------------------------------------------
-    .action(async (options) => {
-      const { ext, reader, debug } = options as {
-        ext?: Array<ExtraExt>;
-        reader?: string[];
-        debug?: boolean;
-      };
+    .action(
+      async (
+        options: Pick<
+          CliOptions,
+          "debug" | "ext" | "reader" | "format" | "output"
+        >,
+      ) => {
+        const { debug, format, output, ...readerOptions } = options;
 
-      const { exts, customReaders } = normalizeReaderOptions({ ext, reader });
+        const { exts, customReaders } = normalizeReaderOptions(readerOptions);
 
-      try {
-        await validate({ exts, customReaders, debug });
-      } catch (error) {
-        console.error(error);
-        process.exitCode = 1;
-      }
-    });
+        try {
+          await validate({ debug, format, output, exts, customReaders });
+        } catch (error) {
+          console.error(error instanceof Error ? error.message : error);
+          process.exitCode = 1;
+        }
+      },
+    );
 }

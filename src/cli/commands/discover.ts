@@ -1,39 +1,32 @@
 import type { CliOption } from "./options";
 import type { CAC } from "cac";
 import { features } from "../../constants";
-import { check } from "../../features";
+import { discover } from "../../features";
 import { options } from "./options";
 
-export function registerCheckCommand(cli: CAC) {
+export function registerDiscoverCommand(cli: CAC) {
   cli
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command(features.check.name, features.check.title)
+    .command(features.discover.name, features.discover.title)
 
     // -----------------------------------------------------------------------
     // Options
     // -----------------------------------------------------------------------
     .option(...options.debug)
-    .option(...options.tsconfig)
-    .option(...options.format)
-    .option(...options.output)
 
     // -----------------------------------------------------------------------
     // Action
     // -----------------------------------------------------------------------
-    .action(
-      async (
-        options: Pick<CliOption, "debug" | "tsconfig" | "format" | "output">,
-      ) => {
-        const { debug, tsconfig, format, output } = options;
+    .action(async (options: Pick<CliOption, "debug">) => {
+      const { debug } = options;
 
-        try {
-          await check({ debug, tsconfigPath: tsconfig, format, output });
-        } catch (error) {
-          console.error(error instanceof Error ? error.message : error);
-          process.exitCode = 1;
-        }
-      },
-    );
+      try {
+        await discover({ debug });
+      } catch (error) {
+        console.error(error instanceof Error ? error.message : error);
+        process.exitCode = 1;
+      }
+    });
 }

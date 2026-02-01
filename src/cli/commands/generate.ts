@@ -1,6 +1,9 @@
-import type { ExtraExt } from "../../core";
+import type { CliOption } from "./options";
 import type { CAC } from "cac";
+import { features } from "../../constants";
 import { generate } from "../../features";
+import { options } from "./options";
+import { normalizeMessageFiles } from "./utils/normalize-message-files";
 import { normalizeReaderOptions } from "./utils/normalize-reader-options";
 
 export function registerGenerateCommand(cli: CAC) {
@@ -8,53 +11,43 @@ export function registerGenerateCommand(cli: CAC) {
     // -----------------------------------------------------------------------
     // Command
     // -----------------------------------------------------------------------
-    .command("generate", "Generate intor types and schemas")
+    .command(features.generate.name, features.generate.title)
 
     // -----------------------------------------------------------------------
     // Option
     // -----------------------------------------------------------------------
-    .option(
-      "--messages <path>",
-      "Explicit messages file for schema generation (bypass runtime loader)",
-    )
-    .option(
-      "--ext <ext>",
-      "Enable extra messages file extension (repeatable)",
-      { default: [] },
-    )
-    .option(
-      "--reader <mapping>",
-      "Custom reader mapping in the form <ext=path> (repeatable)",
-      { default: [] },
-    )
-    .option(
-      "--debug",
-      "Print debug information during config discovery and generation",
-    )
+    .option(...options.debug)
+    .option(...options.messageFile)
+    .option(...options.messageFiles)
+    .option(...options.ext)
+    .option(...options.reader)
 
     // -----------------------------------------------------------------------
     // Action
     // -----------------------------------------------------------------------
-    .action(async (options) => {
-      const { messages, ext, reader, debug } = options as {
-        messages?: string;
-        ext?: Array<ExtraExt>;
-        reader?: string[];
-        debug?: boolean;
-      };
+    .action(
+      async (
+        options: Pick<
+          CliOption,
+          "debug" | "messageFile" | "messageFiles" | "ext" | "reader"
+        >,
+      ) => {
+        const { debug, messageFile, messageFiles, ...readerOptions } = options;
 
-      const { exts, customReaders } = normalizeReaderOptions({ ext, reader });
+        const result = normalizeMessageFiles(messageFile, messageFiles);
+        const { exts, customReaders } = normalizeReaderOptions(readerOptions);
 
-      try {
-        await generate({
-          messageFilePath: messages,
-          exts,
-          customReaders,
-          debug,
-        });
-      } catch (error) {
-        console.error(error);
-        process.exitCode = 1;
-      }
-    });
+        try {
+          await generate({
+            debug,
+            messageSource: result,
+            exts,
+            customReaders,
+          });
+        } catch (error) {
+          console.error(error instanceof Error ? error.message : error);
+          process.exitCode = 1;
+        }
+      },
+    );
 }
