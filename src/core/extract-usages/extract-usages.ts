@@ -1,7 +1,7 @@
 import type { ExtractedUsages } from "./types";
 import type { SourceFile } from "ts-morph";
-import { yellow } from "../../features/shared/print";
-import { createScanLogger } from "../scan";
+import { createLogger } from "../../logger";
+import { br, yellow } from "../../render";
 import { extractUsagesFromSourceFile } from "./extract-usages-from-source-file";
 
 /** Check whether a file-level extraction produced any meaningful usage */
@@ -23,8 +23,12 @@ export function extractUsages({
   sourceFiles = [],
   debug = false,
 }: ExtractUsagesOptions = {}): ExtractedUsages {
-  const logger = createScanLogger(debug, "Extract usages");
-  logger.header(`processing ${yellow(sourceFiles.length)} source files`);
+  if (debug) br();
+  const logger = createLogger(debug);
+  logger.header(
+    `Extract usages - processing ${yellow(sourceFiles.length)} source files`,
+    { kind: "process", lineBreakAfter: 1 },
+  );
 
   const result: ExtractedUsages = {
     preKey: [],
@@ -48,11 +52,11 @@ export function extractUsages({
     const partialUsages = extractUsagesFromSourceFile(sourceFile);
 
     if (isEmpty(partialUsages)) {
-      logger.log("skip", sourceFile.getFilePath());
+      logger.process("skip", sourceFile.getFilePath());
       continue;
     }
 
-    logger.log("ok", sourceFile.getFilePath());
+    logger.process("ok", sourceFile.getFilePath());
     matchedFiles++;
 
     // ---------------------------------------------------------------------------
@@ -69,6 +73,7 @@ export function extractUsages({
     `scanned ${yellow(scannedFiles)} files, extracted from ${yellow(
       matchedFiles,
     )} file(s)`,
+    { kind: "process", lineBreakBefore: 1 },
   );
   return result;
 }

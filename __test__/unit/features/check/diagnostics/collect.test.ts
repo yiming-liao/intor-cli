@@ -94,9 +94,9 @@ describe("collectDiagnostics", () => {
     };
     const result = collectDiagnostics(
       {
-        messagesSchema: {} as any,
-        replacementsSchema: {} as any,
-        richSchema: {} as any,
+        messages: {} as any,
+        replacements: {} as any,
+        rich: {} as any,
       },
       usages,
     );
@@ -132,9 +132,9 @@ describe("collectDiagnostics", () => {
     };
     collectDiagnostics(
       {
-        messagesSchema: {} as any,
-        replacementsSchema: {} as any,
-        richSchema: {} as any,
+        messages: {} as any,
+        replacements: {} as any,
+        rich: {} as any,
       },
       usages,
     );

@@ -1,6 +1,5 @@
-export { writeTypes } from "./write-types";
+export { buildTypes, writeTypes } from "./types/index";
 
-export { writeSchema } from "./write-schema";
-export { readSchema } from "./read-schema";
+export { buildSchema, writeSchema, readSchema } from "./schema";
 
-export { writeMessagesSnapshot } from "./write-messages-snapshot";
+export type { GeneratedSchema, SchemaEntry } from "./types";

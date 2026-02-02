@@ -1,4 +1,4 @@
-import type { MessageSource } from "../generate";
+import type { MessageSource } from "../types";
 
 export function resolveMessageSource(
   source: MessageSource,

@@ -1,9 +1,10 @@
 /* eslint-disable unicorn/no-process-exit */
-import { outro, select, isCancel } from "@clack/prompts";
+import { outro, select, isCancel, intro } from "@clack/prompts";
 import pc from "picocolors";
 import { features } from "../../constants";
 import { check, discover, generate, validate } from "../../features";
-import { printIntro } from "./print-intro";
+import { bold, italic } from "../../render";
+import { version } from "../version";
 import { promptCheck } from "./prompts/prompt-check";
 import { promptDiscover } from "./prompts/prompt-discover";
 import { promptGenerate } from "./prompts/prompt-generate";
@@ -28,7 +29,7 @@ async function runAction<T>(
  * Entry point for the interactive CLI menu.
  */
 export async function run() {
-  printIntro();
+  intro(italic(bold("The Intor CLI.")));
 
   const action = await select({
     message: "Select an action",
@@ -56,7 +57,9 @@ export async function run() {
       break;
     }
     case "generate": {
-      await runAction(promptGenerate, generate);
+      await runAction(promptGenerate, (options) =>
+        generate({ ...options, toolVersion: version }),
+      );
       break;
     }
     case "validate": {

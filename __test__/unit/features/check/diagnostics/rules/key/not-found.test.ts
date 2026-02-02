@@ -1,5 +1,5 @@
 import type { KeyUsage } from "../../../../../../../src/core/extract-usages";
-import type { InferNode } from "../../../../../../../src/core/infer-schema";
+import type { InferNode } from "../../../../../../../src/core/infer-shape";
 import type { KeyUsageLike } from "../../../../../../../src/features/check/diagnostics/rules/key/types";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../../src/features/check/diagnostics/messages";

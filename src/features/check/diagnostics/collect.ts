@@ -1,5 +1,5 @@
 import type { Diagnostic } from "./types";
-import type { ExtractedUsages, InferredSchemas } from "../../../core";
+import type { ExtractedUsages, InferredShapes } from "../../../core";
 import type { KeyUsageLike } from "./rules/key/types";
 import { enforceMissingReplacements } from "./rules/enforce-missing-replacements";
 import { enforceMissingRich } from "./rules/enforce-missing-rich";
@@ -14,7 +14,11 @@ import { richMissing, richNotAllowed, richUnused } from "./rules/rich";
 import { indexUsagesByKey } from "./utils/index-usages-by-key";
 
 export function collectDiagnostics(
-  { messagesSchema, replacementsSchema, richSchema }: InferredSchemas,
+  {
+    messages: messagesSchema,
+    replacements: replacementsSchema,
+    rich: richSchema,
+  }: InferredShapes,
   usages: ExtractedUsages,
 ) {
   const diagnostics: Diagnostic[] = [];

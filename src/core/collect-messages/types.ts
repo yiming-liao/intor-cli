@@ -12,7 +12,7 @@ export interface CollectRuntimeMessagesResult {
 }
 
 export interface MergeOverrides extends DeepMergeOverrideEvent {
-  layer: "client_over_server" | "runtime_over_static";
+  layer: "clientOverServer" | "runtimeOverStatic";
   locale: string;
   configId: string;
 }

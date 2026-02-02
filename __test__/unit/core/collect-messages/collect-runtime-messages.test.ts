@@ -48,7 +48,7 @@ describe("collectRuntimeMessages", () => {
       en: { static: true, server: true },
     });
     expect(result.overrides).toHaveLength(1);
-    expect(result.overrides[0].layer).toBe("runtime_over_static");
+    expect(result.overrides[0].layer).toBe("runtimeOverStatic");
   });
 
   it("merges client runtime messages over server messages", async () => {
@@ -69,8 +69,8 @@ describe("collectRuntimeMessages", () => {
       },
     });
     const layers = result.overrides.map((r) => r.layer);
-    expect(layers).toContain("client_over_server");
-    expect(layers).toContain("runtime_over_static");
+    expect(layers).toContain("clientOverServer");
+    expect(layers).toContain("runtimeOverStatic");
   });
 
   it("passes resolved readers when exts are provided", async () => {

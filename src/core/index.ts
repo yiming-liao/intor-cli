@@ -11,11 +11,11 @@ export {
 
 // infer-schema
 export {
-  inferSchemas,
+  inferShapes,
   type InferNode,
-  type InferredSchemas,
+  type InferredShapes,
   extractInterpolationNames,
-} from "./infer-schema";
+} from "./infer-shape";
 
 // extract-usages
 export {
@@ -32,10 +32,13 @@ export {
 
 // artifacts
 export {
+  buildTypes,
   writeTypes,
+  buildSchema,
   writeSchema,
   readSchema,
-  writeMessagesSnapshot,
+  type GeneratedSchema,
+  type SchemaEntry,
 } from "./artifacts";
 
 // constants

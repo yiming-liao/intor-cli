@@ -2,7 +2,7 @@ import type {
   KeyUsage,
   ReplacementUsage,
 } from "../../../../../../src/core/extract-usages";
-import type { InferNode } from "../../../../../../src/core/infer-schema";
+import type { InferNode } from "../../../../../../src/core/infer-shape";
 import { describe, it, expect } from "vitest";
 import { DIAGNOSTIC_MESSAGES } from "../../../../../../src/features/check/diagnostics/messages";
 import { enforceMissingReplacements } from "../../../../../../src/features/check/diagnostics/rules/enforce-missing-replacements";

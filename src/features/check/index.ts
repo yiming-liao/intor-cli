@@ -1,1 +1,2 @@
-export { check, type CheckOptions } from "./check";
+export { check } from "./check";
+export type { CheckOptions } from "./types";

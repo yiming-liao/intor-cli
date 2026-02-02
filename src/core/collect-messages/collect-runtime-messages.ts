@@ -76,7 +76,7 @@ export async function collectRuntimeMessages(
     onEvent: (event) => {
       overrides.push({
         ...event,
-        layer: "client_over_server",
+        layer: "clientOverServer",
         locale,
         configId: config.id,
       });
@@ -90,7 +90,7 @@ export async function collectRuntimeMessages(
     onEvent: (event) => {
       overrides.push({
         ...event,
-        layer: "runtime_over_static",
+        layer: "runtimeOverStatic",
         locale,
         configId: config.id,
       });

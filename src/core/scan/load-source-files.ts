@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Project, type SourceFile } from "ts-morph";
-import { yellow } from "../../features/shared/print";
-import { createScanLogger } from "./scan-logger";
+import { createLogger } from "../../logger";
+import { br, yellow } from "../../render";
 
 /**
  * Load source files from a tsconfig.
@@ -19,10 +19,13 @@ import { createScanLogger } from "./scan-logger";
  */
 export function loadSourceFiles(
   tsconfigPath: string,
-  debug?: boolean,
+  debug = false,
 ): SourceFile[] {
-  const logger = createScanLogger(debug, "Load source files");
-  logger.header("processing tsconfig");
+  if (debug) br();
+  const logger = createLogger(debug);
+  logger.header("Load source files - processing tsconfig", {
+    kind: "process",
+  });
 
   // ---------------------------------------------------------------------------
   // Try loading source files directly from the given tsconfig
@@ -30,7 +33,7 @@ export function loadSourceFiles(
   const project = new Project({ tsConfigFilePath: tsconfigPath });
   const files = project.getSourceFiles();
   if (files.length > 0) {
-    logger.footer(`loaded ${yellow(files.length)} files`);
+    logger.footer(`loaded ${yellow(files.length)} files`, { kind: "process" });
     return files;
   }
 
@@ -43,11 +46,12 @@ export function loadSourceFiles(
   // Project references (e.g. { references: [ { path: "./tsconfig.app.json" } ] })
   const references: { path: string }[] = rawTsConfig.references ?? [];
   if (references.length === 0) {
-    logger.footer("no source files found");
+    logger.footer("no source files found", { kind: "process" });
     return [];
   }
 
-  logger.log("load", `references (${references.length})`);
+  logger.log();
+  logger.process("load", `references (${references.length})`);
 
   // ---------------------------------------------------------------------------
   // Load source files from each referenced tsconfig
@@ -59,16 +63,19 @@ export function loadSourceFiles(
 
     // Skip missing referenced tsconfig files
     if (!fs.existsSync(refPath)) {
-      logger.log("warn", `referenced tsconfig not found: ${refPath}`);
+      logger.process("warn", `referenced tsconfig not found: ${refPath}`);
       continue;
     }
 
-    logger.log("load", `${path.relative(process.cwd(), refPath)}`);
+    logger.process("load", `${path.relative(process.cwd(), refPath)}`);
 
     const refProject = new Project({ tsConfigFilePath: refPath });
     collected.push(...refProject.getSourceFiles());
   }
 
-  logger.footer(`loaded ${yellow(collected.length)} files`);
+  logger.footer(`loaded ${yellow(collected.length)} files`, {
+    kind: "process",
+    lineBreakBefore: 1,
+  });
   return collected;
 }

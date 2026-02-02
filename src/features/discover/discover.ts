@@ -1,24 +1,22 @@
 import { features } from "../../constants";
 import { discoverConfigs } from "../../core";
-import { br, print, printConfigs, printTitle } from "../shared/print";
+import { br, renderConfigs, renderTitle } from "../../render";
 
 export interface DiscoverOptions {
   debug?: boolean;
 }
 
-export async function discover({ debug }: DiscoverOptions) {
-  printTitle(features.discover.title);
+export async function discover({ debug = false }: DiscoverOptions) {
+  renderTitle(features.discover.title);
 
   const entries = await discoverConfigs(debug);
 
   if (entries.length === 0) {
     br();
-    print("No Intor config found.\n", 1);
+    console.log(" No Intor config found.\n");
     return;
   }
 
   br();
-  printConfigs(entries);
-
-  br();
+  renderConfigs(entries);
 }

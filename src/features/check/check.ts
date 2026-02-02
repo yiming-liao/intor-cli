@@ -1,70 +1,55 @@
 /* eslint-disable unicorn/no-process-exit */
-import type { Diagnostic } from "./diagnostics/types";
+import type { CheckOptions, CheckReport } from "./types";
 import { features } from "../../constants";
 import { extractUsages, readSchema } from "../../core";
 import { loadSourceFiles } from "../../core/scan";
-import { printTitle } from "../shared/print";
+import { renderTitle } from "../../render";
 import { spinner } from "../shared/spinner";
 import { writeJsonReport } from "../shared/write-json-report";
 import { buildScopeUsages } from "./build-scoped-usages";
 import { collectDiagnostics, groupDiagnostics } from "./diagnostics";
-import { printSummary } from "./print-summary";
-
-interface CheckReport {
-  configs: Array<{ id: string; diagnostics: Diagnostic[] }>;
-}
-
-export interface CheckOptions {
-  tsconfigPath?: string;
-  format?: "human" | "json";
-  output?: string;
-  debug?: boolean;
-}
+import { renderConfigSummary } from "./render-config-summary";
 
 export async function check({
+  tsconfigPath = "tsconfig.json",
   format = "human",
   output,
-  tsconfigPath = "tsconfig.json",
   debug,
 }: CheckOptions) {
   const isHuman = format === "human";
-  if (isHuman) {
-    printTitle(features.check.title);
-    spinner.start();
-  }
+  renderTitle(features.check.title, isHuman);
 
   try {
     // Read generated schema
+    if (isHuman) spinner.start();
     const schema = await readSchema();
-
     if (isHuman) spinner.stop();
 
     // Load source files
     const sourceFiles = loadSourceFiles(tsconfigPath, debug);
     if (sourceFiles.length === 0) {
-      if (sourceFiles.length === 0) {
-        throw new Error(
-          [
-            "No source files found.",
-            "",
-            "Check the following:",
-            "  - tsconfig.json path",
-            "  - project root",
-            "  - included source patterns",
-          ].join("\n"),
-        );
-      }
+      throw new Error(
+        [
+          "No source files found.",
+          "",
+          "Check the following:",
+          "  - tsconfig.json path",
+          "  - project root",
+          "  - included source patterns",
+        ].join("\n"),
+      );
     }
+
     // Extract usages from source files
     const usages = extractUsages({ sourceFiles, debug });
 
     // Use first config's id as default key
-    const defaultConfigKey = schema.configs[0]?.id;
+    const defaultConfigKey = schema.entries[0]?.id;
 
     const report: CheckReport = { configs: [] };
 
     // Per-config processing
-    for (const config of schema.configs) {
+    for (const config of schema.entries) {
       const configKey = config.id;
 
       // per-config usages
@@ -75,20 +60,13 @@ export async function check({
       });
 
       // Diagnostic
-      const diagnostics = collectDiagnostics(config.schemas, scopedUsages);
+      const diagnostics = collectDiagnostics(config.shapes, scopedUsages);
       report.configs.push({ id: config.id, diagnostics });
-
-      // Human summary
-      if (isHuman) {
-        const grouped = groupDiagnostics(diagnostics);
-        printSummary(config.id, grouped);
-      }
+      renderConfigSummary(config.id, groupDiagnostics(diagnostics), isHuman);
     }
 
     // JSON output
-    if (format === "json") {
-      await writeJsonReport(report, output);
-    }
+    if (format === "json") await writeJsonReport(report, output);
   } catch (error) {
     if (isHuman) spinner.stop();
     console.error(error instanceof Error ? error.message : String(error));

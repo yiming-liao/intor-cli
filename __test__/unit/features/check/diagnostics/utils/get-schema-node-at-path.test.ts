@@ -1,4 +1,4 @@
-import type { InferNode } from "../../../../../../src/core/infer-schema";
+import type { InferNode } from "../../../../../../src/core/infer-shape";
 import { describe, it, expect } from "vitest";
 import { getSchemaNodeAtPath } from "../../../../../../src/features/check/diagnostics/utils/get-schema-node-at-path";
 

@@ -1,44 +1,35 @@
 /* eslint-disable unicorn/no-process-exit */
-
+import type { GenerateOptions } from "./types";
+import type { SchemaEntry, MergeOverrides } from "../../core";
 import type { LocaleMessages } from "intor";
 import { readFile } from "node:fs/promises";
-import { buildTypes, buildSchemas, type BuildInput } from "../../build";
 import { features } from "../../constants";
 import {
   discoverConfigs,
   collectRuntimeMessages,
-  inferSchemas,
+  inferShapes,
   writeTypes,
   writeSchema,
   DEFAULT_OUT_DIR,
-  type ReaderOptions,
-  type MergeOverrides,
+  buildTypes,
+  buildSchema,
 } from "../../core";
-import { br, printConfigs, printTitle } from "../shared/print";
+import { br, renderConfigs, renderTitle } from "../../render";
 import { spinner } from "../shared/spinner";
 import { toRelativePath } from "../shared/to-relative-path";
-import { printOverrides } from "./print-overrides";
-import { printSummary } from "./print-summary";
+import { renderOverrides } from "./render-overrides";
+import { renderSummary } from "./render-summary";
 import { resolveMessageSource } from "./utils/resolve-message-source";
 import { validateMessageSource } from "./utils/validate-message-source";
-
-export type MessageSource =
-  | { mode: "single"; file: string }
-  | { mode: "mapping"; files: Record<string, string> }
-  | { mode: "none" };
-
-export interface GenerateOptions extends ReaderOptions {
-  messageSource?: MessageSource;
-  debug?: boolean;
-}
 
 export async function generate({
   messageSource = { mode: "none" },
   exts = [],
   customReaders,
-  debug,
+  debug = false,
+  toolVersion,
 }: GenerateOptions) {
-  printTitle(features.generate.title);
+  renderTitle(features.generate.title);
   const start = performance.now();
 
   try {
@@ -52,13 +43,13 @@ export async function generate({
     validateMessageSource(messageSource, configEntries);
 
     br();
-    printConfigs(configEntries);
-    spinner.start();
+    renderConfigs(configEntries, debug);
+    br(1, debug);
 
     // -----------------------------------------------------------------------
     // Collect messages and infer schemas
     // -----------------------------------------------------------------------
-    const buildInputs: BuildInput[] = [];
+    const schemaEntries: SchemaEntry[] = [];
 
     // Per-config message collection and schema inference
     for (const { config } of configEntries) {
@@ -68,9 +59,10 @@ export async function generate({
       let overrides: MergeOverrides[] = [];
       const messageFilePath = resolveMessageSource(messageSource, id);
 
+      spinner.start();
       if (messageFilePath) {
         // ----------------------------------------------------------
-        // File mode (per-config)
+        // File mode
         // ----------------------------------------------------------
         const content = await readFile(messageFilePath, "utf8");
         messages = { [config.defaultLocale]: JSON.parse(content) };
@@ -84,29 +76,30 @@ export async function generate({
           { exts, customReaders },
         );
         messages = result.messages;
-        overrides = result.overrides;
+        overrides = result.overrides.filter((o) => o.kind === "override");
       }
       spinner.stop();
 
-      printOverrides(config.id, overrides);
-      const schemas = inferSchemas(messages[config.defaultLocale]);
-      buildInputs.push({ id, locales, schemas });
+      if (overrides.length > 0) renderOverrides(config.id, overrides, debug);
 
-      spinner.start();
+      const shapes = inferShapes(messages[config.defaultLocale]);
+      schemaEntries.push({ id, locales, shapes });
     }
 
     // -----------------------------------------------------------------------
     // Build artifacts and write output
     // -----------------------------------------------------------------------
-    const types = buildTypes(buildInputs);
-    const schema = buildSchemas(buildInputs);
+    const generatedTypes = buildTypes(schemaEntries);
+    const generatedSchema = buildSchema(schemaEntries, toolVersion);
 
     // Write files
-    await writeTypes(types);
-    await writeSchema(schema);
-
+    spinner.start();
+    await writeTypes(generatedTypes);
+    await writeSchema(generatedSchema);
     spinner.stop();
-    printSummary(toRelativePath(DEFAULT_OUT_DIR), performance.now() - start);
+
+    const duration = performance.now() - start;
+    renderSummary(toRelativePath(DEFAULT_OUT_DIR), duration, true);
   } catch (error) {
     spinner.stop();
     console.error(error instanceof Error ? error.message : String(error));

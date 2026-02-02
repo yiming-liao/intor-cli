@@ -1,5 +1,5 @@
 import type { ConfigEntry } from "../../../core";
-import type { MessageSource } from "../generate";
+import type { MessageSource } from "../types";
 
 /**
  * Validate that the provided MessageSource is compatible with
