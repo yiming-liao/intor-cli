@@ -6,59 +6,56 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-%E2%9C%94-blue?style=flat&colorA=000000&colorB=000000)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/npm/l/intor-cli?style=flat&colorA=000000&colorB=000000)](LICENSE)
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="generate-demo.gif" />
-    </td>
-    <td align="center">
-      <img src="check-demo.gif" />
-    </td>
-  </tr>
-</table>
 </div>
 
 ## Overview
 
-- **generate** — message schema & types
-- **check** — usage analysis
+- **discover** — config discovery
+- **generate** — schema and type generation
+- **check** — static usage analysis
 - **validate** — locale completeness
+
+<img src='demo.gif' />
 
 ## Commands
 
-#### generate
+Running `intor-cli` without a command launches the interactive menu.
+
+### Discover
+
+```bash
+npx intor-cli discover
+```
+
+Discovers Intor configs in the current workspace.
+
+### Generate
 
 ```bash
 npx intor-cli generate
 ```
 
-- Generates TypeScript types and schema artifacts
-- Uses the default locale as the single source of truth
-- Reports message override behavior during generation
+Generates schemas and TypeScript types from the default locale.
 
-#### check
+### Check
 
 ```bash
 npx intor-cli check
 ```
 
-- Statistically analyzes translator usage in your codebase
-- Detects incorrect keys, replacements, and rich tag usage
-- Reports diagnostics with precise source locations
+Analyzes translator usage and reports diagnostics.
 
-#### validate
+### Validate
 
 ```bash
 npx intor-cli validate
 ```
 
-- Validates locale message completeness against schemas
-- Checks missing keys, replacements, and rich tags
-- Reports issues grouped by config and locale
+Validates locale messages against generated schemas.
+
+---
 
 ## Design Guarantees
 
-- Message types are inferred from the **_default locale_** only.
+- Schemas and types are inferred **only from the default locale**.
 - All locales are expected to share the same message shape.
-- Locale is treated strictly as a runtime dimension, not a structural one.
-- Generated types are intentionally conservative and do not enforce locale completeness.
