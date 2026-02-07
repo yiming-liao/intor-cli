@@ -13,7 +13,7 @@
 - **discover** — config discovery
 - **generate** — schema and type generation
 - **check** — static usage analysis
-- **validate** — locale completeness
+- **validate** — locale completeness validation
 
 <img src='demo.gif' />
 
