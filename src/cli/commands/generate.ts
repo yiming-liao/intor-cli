@@ -2,7 +2,7 @@ import type { CliOption } from "./options";
 import type { CAC } from "cac";
 import { features } from "../../constants";
 import { generate } from "../../features";
-import { version } from "../version";
+import { VERSION } from "../version";
 import { options } from "./options";
 import { normalizeMessageFiles } from "./utils/normalize-message-files";
 import { normalizeReaderOptions } from "./utils/normalize-reader-options";
@@ -44,7 +44,7 @@ export function registerGenerateCommand(cli: CAC) {
             messageSource: result,
             exts,
             customReaders,
-            toolVersion: version,
+            toolVersion: VERSION,
           });
         } catch (error) {
           console.error(error instanceof Error ? error.message : error);

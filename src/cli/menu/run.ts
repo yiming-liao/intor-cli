@@ -4,7 +4,7 @@ import pc from "picocolors";
 import { features } from "../../constants";
 import { check, discover, generate, validate } from "../../features";
 import { bold, italic } from "../../render";
-import { version } from "../version";
+import { VERSION } from "../version";
 import { promptCheck } from "./prompts/prompt-check";
 import { promptDiscover } from "./prompts/prompt-discover";
 import { promptGenerate } from "./prompts/prompt-generate";
@@ -58,7 +58,7 @@ export async function run() {
     }
     case "generate": {
       await runAction(promptGenerate, (options) =>
-        generate({ ...options, toolVersion: version }),
+        generate({ ...options, toolVersion: VERSION }),
       );
       break;
     }

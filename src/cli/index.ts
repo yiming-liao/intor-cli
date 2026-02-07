@@ -8,8 +8,7 @@ import {
   registerValidateCommand,
 } from "./commands";
 import { run } from "./menu";
-
-const VERSION = "0.1.10";
+import { VERSION } from "./version";
 
 async function main() {
   // argv = [node, script, ...args]
