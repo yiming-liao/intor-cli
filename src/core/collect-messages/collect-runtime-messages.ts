@@ -50,6 +50,7 @@ export async function collectRuntimeMessages(
         config: { ...config, loader: serverLoader },
         locale,
         readers,
+        fetch: globalThis.fetch,
       });
     }
   }
@@ -62,6 +63,7 @@ export async function collectRuntimeMessages(
         config: { ...config, loader: clientLoader },
         locale,
         readers,
+        fetch: globalThis.fetch,
       });
     }
   }
