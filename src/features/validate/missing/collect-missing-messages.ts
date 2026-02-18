@@ -1,6 +1,6 @@
 import type { MissingRequirements } from "./collect-missing-requirements";
 import type { InferNode } from "../../../core";
-import type { MessageObject } from "intor";
+import type { MessageObject } from "intor-translator";
 
 export function collectMissingMessages(
   schema: InferNode,

@@ -1,5 +1,6 @@
 import type { ExtraExt } from "../constants";
-import type { DeepMergeOverrideEvent, LocaleMessages } from "intor";
+import type { DeepMergeOverrideEvent } from "intor/internal";
+import type { LocaleMessages } from "intor-translator";
 
 export interface ReaderOptions {
   exts?: Array<ExtraExt>;

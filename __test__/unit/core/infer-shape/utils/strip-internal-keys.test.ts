@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { INTOR_PREFIX } from "intor";
+import { INTOR_PREFIX } from "intor/internal";
 import { describe, it, expect } from "vitest";
 import { stripInternalKeys } from "../../../../../src/core/infer-shape/utils/strip-internal-keys";
 

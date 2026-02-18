@@ -1,5 +1,6 @@
 import type { ReaderOptions } from "./types";
-import type { IntorResolvedConfig, MessageObject } from "intor";
+import type { IntorResolvedConfig } from "intor";
+import type { MessageObject } from "intor-translator";
 import { collectRuntimeMessages } from "./collect-runtime-messages";
 
 export async function collectOtherLocaleMessages(

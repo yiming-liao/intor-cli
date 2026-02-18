@@ -1,5 +1,5 @@
 import type { InferNode } from "../types";
-import type { MessageObject, MessageValue } from "intor";
+import type { MessageObject, MessageValue } from "intor-translator";
 import { shouldSkipKey } from "./should-skip-key";
 
 /**

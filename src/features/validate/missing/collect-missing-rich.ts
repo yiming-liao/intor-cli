@@ -1,6 +1,6 @@
 import type { MissingRequirements } from "./collect-missing-requirements";
 import type { InferNode } from "../../../core";
-import { tokenize, type MessageObject, type Token } from "intor";
+import { tokenize, type MessageObject, type Token } from "intor-translator";
 
 export function collectMissingRich(
   schema: InferNode,

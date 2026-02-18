@@ -1,13 +1,18 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable unicorn/consistent-function-scoping */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IntorResolvedConfig } from "intor";
-import { loadMessages } from "intor/server";
+import { loadMessages } from "intor/internal";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { collectRuntimeMessages } from "../../../../src/core";
 
-vi.mock("intor/server", () => ({
-  loadMessages: vi.fn(),
-}));
+vi.mock("intor/internal", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("intor/internal")>();
+  return {
+    ...actual,
+    loadMessages: vi.fn(),
+  };
+});
 
 vi.mock(
   "../../../../src/core/collect-messages/resolve-messages-reader",

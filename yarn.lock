@@ -297,33 +297,32 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@intor/reader-json5@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@intor/reader-json5/-/reader-json5-0.1.0.tgz#201f7d9159206b1e62d24e9a1aef6929cbc43f99"
-  integrity sha512-ubyME0dHIf4gEkTE7syEfk0pO6FeJDB8TrdUEh7a9coaamSQlOC9DCoFEJQwxEpdGyPGWG7RmKGyfdd/ErjZsw==
+"@intor/reader-json5@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@intor/reader-json5/-/reader-json5-0.1.1.tgz#012cc37f57af632c6234d1d233ca8ff6a62b96fc"
+  integrity sha512-kqQZwG/3dmjKoot7N8UgIWrmoC/hY8SACsdACTGEL62SXtB6tKd+9IUxYGHBYqcvsqKZ9/eFl6IZO9UWEnizJQ==
   dependencies:
     json5 "^2.2.3"
 
-"@intor/reader-md@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@intor/reader-md/-/reader-md-0.1.4.tgz#61d711da555aa701596afdde2a48db6b30fff448"
-  integrity sha512-l86PW95mKZdwTbqInSyBYBtEvvL8i+BYYYG2e3mKKG+Vw1lV2oDOJA4Id5jFNzh+dAjCLQe2E9iOO/RAakVoKw==
+"@intor/reader-md@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@intor/reader-md/-/reader-md-0.1.5.tgz#ce7c5bfc25ae95b2d77506adcbf881eb93d7bbd9"
+  integrity sha512-+Smt3m8KtFgSWVuTDPRPplT0v0wGSm+wPUaACfch4u000QhU4aAxl9Mb3e5BKUUXL5sWJHYhs6NrFk0s0khncA==
   dependencies:
-    intor "^2.3.26"
     remark "^15.0.1"
     remark-gfm "^4.0.1"
 
-"@intor/reader-toml@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@intor/reader-toml/-/reader-toml-0.1.0.tgz#872eb81c791d8389bee47732aebf0ff60e3efeab"
-  integrity sha512-ZknX+fl4ACUM1PVfPsTcAWlpqktFvdxhMlykU4Op9AEmiEciQdaXXUtLmYrV6kb8AkIXDmhqdPoUMaWssbS97Q==
+"@intor/reader-toml@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@intor/reader-toml/-/reader-toml-0.1.1.tgz#b99c99de5271ebe2dd4b06077415fdda9bc31a21"
+  integrity sha512-5y0QsjA2HJmzJ5nwbohhbt6ikj9682d33PpmEithcEh9vEK1F7WJzoPTj8abaKFBOCJV53U1GxBZtksh/r4oZA==
   dependencies:
     "@iarna/toml" "^2.2.5"
 
-"@intor/reader-yaml@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@intor/reader-yaml/-/reader-yaml-0.1.1.tgz#a696d66bf1e5e9e2b1f3f8768f03021fb5bc5ceb"
-  integrity sha512-DnIDTPtpg8MRbcLCp1wgB2dg0Qd2FoPmwp1NuDJ0uWfnHFIynFJnZfSJAeCDnBKn9fKbf65BpgO06zZ3p9iWag==
+"@intor/reader-yaml@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@intor/reader-yaml/-/reader-yaml-0.1.2.tgz#93d7ea3301d0006988fbcc320c5e7b6a2247960b"
+  integrity sha512-t9Znof5vlQcYpFBEgZe8gDfozNbBdFpOCfBOkPwTCPEtI4K4rgsRQKAAmvN3Fr80DTqsbNEgY6CTnRHPRRScUQ==
   dependencies:
     yaml "^2.8.2"
 
@@ -2072,19 +2071,10 @@ intor-translator@1.4.13:
   dependencies:
     rura "^1.0.8"
 
-intor@^2.3.26:
-  version "2.3.26"
-  resolved "https://registry.yarnpkg.com/intor/-/intor-2.3.26.tgz#bf0ed1325182e68cff5a4f81bbe10ca8e6377710"
-  integrity sha512-doPjxGTlprJEu/0IsnyYlfnsmhgRVVKiTgFKQL53mh32ZtaplRGhTe6G9eFqpCzXlHZ59IG2PGxnVYpuLeTf2A==
-  dependencies:
-    intor-translator "1.4.13"
-    logry "2.1.6"
-    p-limit "7.2.0"
-
-intor@^2.3.35:
-  version "2.3.35"
-  resolved "https://registry.yarnpkg.com/intor/-/intor-2.3.35.tgz#f4c550d8ca91ad6321d4a636d7db6dd25020c0e2"
-  integrity sha512-Av4eaCIRBbvCbEkBvK38JlEAbW1xiFgYjnFBTqKGatWCfDGYrbLcexagaVxHlQe1K+yElUgS0zRIHCtCPNM2Hg==
+intor@^2.4.12:
+  version "2.4.12"
+  resolved "https://registry.yarnpkg.com/intor/-/intor-2.4.12.tgz#a60692af515e1006cbdec1ab864823815ad8886d"
+  integrity sha512-scvGGAEoovpFh9oOvdjkB5g1VtiqTfY4+LJf13iyfH4j49bL2WQhQxfNgQPJMUK9R2Ar5ZtZfPqgqZ6A2Ta7JA==
   dependencies:
     intor-translator "1.4.13"
     logry "2.1.6"

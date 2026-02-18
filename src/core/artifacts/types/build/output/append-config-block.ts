@@ -1,9 +1,9 @@
-import { PREFIX_PLACEHOLDER } from "intor";
+import { LOCALE_PLACEHOLDER } from "intor";
 import { indent } from "../utils/indent";
 
 function wrapWithLocale(type: string) {
   return `{
-${indent(4)}"${PREFIX_PLACEHOLDER}": ${type};
+${indent(4)}"${LOCALE_PLACEHOLDER}": ${type};
 ${indent(3)}}`;
 }
 

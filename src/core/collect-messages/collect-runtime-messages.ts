@@ -3,14 +3,14 @@ import type {
   CollectRuntimeMessagesResult,
   MergeOverrides,
 } from "./types";
+import type { LocaleMessages } from "intor-translator";
 import {
   mergeMessages,
-  resolveLoaderOptions,
   type IntorResolvedConfig,
-  type LocaleMessages,
   type MessagesReaders,
 } from "intor";
-import { loadMessages } from "intor/server";
+import { resolveLoaderOptions } from "intor/internal";
+import { loadMessages } from "intor/internal";
 import { getBuiltInReaders } from "../collect-messages/readers";
 import { resolveMessagesReader } from "./resolve-messages-reader";
 

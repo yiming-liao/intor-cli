@@ -1,4 +1,4 @@
-import { INTOR_PREFIX } from "intor";
+import { INTOR_PREFIX } from "intor/internal";
 
 /**
  * Remove internal Intor keys from inferred schema objects.

@@ -1,5 +1,5 @@
 import type { InferNode } from "./types";
-import type { MessageObject, MessageValue } from "intor";
+import type { MessageObject, MessageValue } from "intor-translator";
 import { extractInterpolationNames } from "./utils/extract-interpolation-names";
 import { inferObject } from "./utils/infer-object";
 import { isMessageObject } from "./utils/is-message-object";

@@ -1,5 +1,5 @@
 import type { InferredShapes } from "../../../core";
-import type { MessageObject } from "intor";
+import type { MessageObject } from "intor-translator";
 import { collectMissingMessages } from "./collect-missing-messages";
 import { collectMissingReplacements } from "./collect-missing-replacements";
 import { collectMissingRich } from "./collect-missing-rich";

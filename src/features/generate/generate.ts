@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-process-exit */
 import type { GenerateOptions } from "./types";
 import type { SchemaEntry, MergeOverrides } from "../../core";
-import type { LocaleMessages } from "intor";
+import type { LocaleMessages } from "intor-translator";
 import { readFile } from "node:fs/promises";
 import { features } from "../../constants";
 import {

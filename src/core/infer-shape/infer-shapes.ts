@@ -1,5 +1,5 @@
 import type { InferredShapes } from "./types";
-import type { MessageObject } from "intor";
+import type { MessageObject } from "intor-translator";
 import { inferMessagesShape } from "./infer-messages-shape";
 import { inferReplacementsShape } from "./infer-replacements-shape";
 import { inferRichShape } from "./infer-rich-shape";
